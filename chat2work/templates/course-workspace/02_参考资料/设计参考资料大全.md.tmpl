@@ -1,0 +1,96 @@
+# 设计参考资料大全
+
+> 由 Chat2Work 整理
+> 汇总课程设计涉及的参考资料、技术文档、社区资源
+> 生成时间：{{ generated_at }}
+
+---
+
+## 一、官方资料
+
+{% set ns_official = namespace(found=false) %}
+{% for ref in refs %}
+{%- if ref.why and ('官方' in ref.why or 'official' in ref.why or 'wiki' in ref.why or 'product' in ref.why or '官方' in (ref.title or '')) %}
+{% set ns_official.found = true %}
+- **{{ ref.title | default(ref.url) }}** — {{ ref.url }}
+  - 发送者：{{ ref.sender }}，时间：{{ ref.time }}
+  - 说明：{{ ref.why | default('-') }}
+{% endif -%}
+{% endfor %}
+{% if not ns_official.found %}
+暂无明确标注的官方资料，请查看 `链接库.md` 全部链接。
+{% endif %}
+
+---
+
+## 二、社区与开源项目
+
+{% set ns_github = namespace(found=false) %}
+{% for ref in refs %}
+{%- if 'github.com' in ref.url %}
+{% set ns_github.found = true %}
+- **{{ ref.title | default('GitHub 项目') }}** — {{ ref.url }}
+  - 推荐人：{{ ref.sender }}
+  - 用途：{{ ref.why | default('参考代码/模型') }}
+{% endif -%}
+{% endfor %}
+{% if not ns_github.found %}
+暂无 GitHub 链接。
+{% endif %}
+
+---
+
+## 三、教程与博客
+
+{% set ns_blog = namespace(found=false) %}
+{% for ref in refs %}
+{%- set ns_blog.current = false %}
+{%- if 'blog' in ref.url or 'csdn' in ref.url or 'juejin' in ref.url or 'zhihu' in ref.url or 'medium' in ref.url %}
+{% set ns_blog.found = true %}
+- **{{ ref.title | default('博客文章') }}** — {{ ref.url }}
+  - 作者：{{ ref.sender }}
+  - 摘要：{{ ref.why | default('-') }}
+{% endif -%}
+{% endfor %}
+{% if not ns_blog.found %}
+暂无博客链接。
+{% endif %}
+
+---
+
+## 四、原始资料包
+
+`02_参考资料/原始资料包/` 目录下是老师/同学发送的压缩包和附件，已解压原样保留：
+
+- 检查该目录下的文件列表
+- 参考各项目的 README 或官方文档
+- 若有代码包，通常可以直接放进 `03_我的实现/` 起步
+
+---
+
+## 五、其他资源
+
+{% set ns_other = namespace(found=false) %}
+{% for ref in refs %}
+{%- if 'github.com' not in ref.url and 'mp.weixin.qq.com' not in ref.url and 'blog' not in ref.url and 'csdn' not in ref.url and 'juejin' not in ref.url and 'zhihu' not in ref.url and 'medium' not in ref.url %}
+{% set ns_other.found = true %}
+- {{ ref.title | default(ref.url) }} — {{ ref.url }}
+  - {{ ref.why | default('无说明') }}
+{% endif -%}
+{% endfor %}
+{% if not ns_other.found %}
+无其他资源。
+{% endif %}
+
+---
+
+## 资料使用建议
+
+1. **先看官方**：官方 Wiki/文档永远是最权威的
+2. **再看社区**：GitHub 项目可以快速搭建脚手架
+3. **博客兜底**：博客适合补漏，但要注意时效性
+4. **原始资料包**：老师发的东西通常和评分直接相关，必看
+
+## 想扩展？
+
+发现新资料时，直接编辑此文件追加，或重新运行 `/chat2work` 让它重新扫描群聊。

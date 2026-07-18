@@ -1,0 +1,32 @@
+{
+  "mode": "course-maker",
+  "target": null,
+  "detail": {
+    "course_score": 4,
+    "distill_score": 0,
+    "course_hits": [
+      [
+        "提交",
+        "wxid_tretmcwzt3wp21"
+      ],
+      [
+        "实习",
+        "wxid_tretmcwzt3wp21"
+      ],
+      [
+        "项目",
+        "wxid_8ap972jyk39e22"
+      ],
+      [
+        "项目",
+        "wxid_21veotaeo8ju22"
+      ]
+    ],
+    "distill_hits": [],
+    "top_sender": "wxid_21veotaeo8ju22",
+    "top_sender_ratio": 0.56,
+    "sender_count": 8,
+    "source": "auto-detected"
+  },
+  "messages_file": "D:/workspace/demo/test_wechat_assistant/chat2work/tests/real_messages.json"
+}

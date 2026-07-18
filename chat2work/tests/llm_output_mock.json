@@ -1,0 +1,68 @@
+{
+  "mode": "course-maker",
+  "project_name": "数字孪生WAVEGO实验",
+  "deadline": "2026-07-25",
+  "total_messages": 21,
+  "tasks": [
+    {
+      "name": "实验一：环境与硬件认知",
+      "description": "安装 Unity 2020.3 LTS，连接 WAVEGO，跑通基础控制",
+      "src_msgs": ["msg#118", "msg#121"]
+    },
+    {
+      "name": "实验二：构建虚拟机器狗",
+      "description": "在 Unity 中建立 WAVEGO 虚拟模型，12 个关节 Transform 与物理舵机一一对应",
+      "src_msgs": ["msg#123"]
+    },
+    {
+      "name": "实验三：通信桥接与协议转换",
+      "description": "编写 Python 通信桥接程序，一侧 Modbus TCP 服务器，另一侧封装 WAVEGO 控制接口。烧录补丁固件获取串口 JSON 状态反馈",
+      "src_msgs": ["msg#125", "msg#128"]
+    },
+    {
+      "name": "实验四：联调、测试与验收",
+      "description": "控制模式与同步模式各测试一段，录制演示视频，整理实验报告",
+      "src_msgs": ["msg#130"]
+    }
+  ],
+  "refs": [
+    {
+      "url": "https://www.waveshare.net/wiki/WAVEGO",
+      "title": "WAVEGO Wiki",
+      "sender": "张老师",
+      "time": "2026-07-10T11:13:23",
+      "why": "机器狗产品介绍页，先看产品介绍和开发环境配置",
+      "src_msg": "msg#2"
+    },
+    {
+      "url": "https://github.com/arnaucresp0/WAVEGO_3D_MODEL",
+      "title": "WAVEGO 3D 模型仓库",
+      "sender": "张老师",
+      "time": "2026-07-10T11:15:02",
+      "why": "含 STEP/STL/URDF 完整模型，可直接拿来用",
+      "src_msg": "msg#3"
+    },
+    {
+      "url": "https://blog.csdn.net/qq_60513199/article/details/136921192",
+      "title": "四足机器人连杆结构设计",
+      "sender": "张老师",
+      "time": "2026-07-11T09:15:00",
+      "why": "理解数字孪生三层架构和连杆结构设计",
+      "src_msg": "msg#11"
+    }
+  ],
+  "submission": {
+    "method": "学习通 + 邮箱 zhang@cup.edu.cn",
+    "deadline": "2026-07-25",
+    "format": "PDF 报告 + 工程源码 zip + 演示视频",
+    "src_msgs": ["msg#7"]
+  },
+  "grading": [
+    {"item": "架构与原理理解", "score": 15, "criteria": "能清晰阐述三层架构、双向同步与协议转换原理"},
+    {"item": "Unity 虚拟模型", "score": 20, "criteria": "12 关节驱动正确、插值平滑、相机/UI 完善"},
+    {"item": "通信桥接实现", "score": 25, "criteria": "Modbus 服务器 + WAVEGO 接口封装 + IEEE754 正确"},
+    {"item": "双向同步功能", "score": 25, "criteria": "控制模式与同步模式均可稳定运行、数据一致"},
+    {"item": "联调与报告", "score": 15, "criteria": "测试完整、问题排查到位、报告规范、演示清晰"}
+  ],
+  "raw_assets": []
+}

@@ -1,0 +1,249 @@
+{
+  "source_file": "tests\\mock_course_chat.txt",
+  "total_messages": 21,
+  "senders": {
+    "张老师": 15,
+    "李同学": 3,
+    "王同学": 3
+  },
+  "msg_types": {
+    "text": 16,
+    "link": 3,
+    "file": 2
+  },
+  "time_range": {
+    "start": "2026-07-10T11:11:01",
+    "end": "2026-07-13T18:25:00"
+  },
+  "messages": [
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-10T11:11:01",
+      "content": "同学们，本周开始数字孪生机器狗实验，这是本学期的课程设计主任务。",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 1,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-10T11:13:23",
+      "content": "机器狗产品页：https://www.waveshare.net/wiki/WAVEGO\n先看产品介绍和开发环境配置。",
+      "msg_type": "link",
+      "meta": {
+        "urls": [
+          "https://www.waveshare.net/wiki/WAVEGO"
+        ],
+        "primary_url": "https://www.waveshare.net/wiki/WAVEGO"
+      },
+      "source_line": 4,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-10T11:15:02",
+      "content": "参考代码仓库：https://github.com/arnaucresp0/WAVEGO_3D_MODEL\n含 STEP/STL/URDF 完整模型，可以拿来直接用。",
+      "msg_type": "link",
+      "meta": {
+        "urls": [
+          "https://github.com/arnaucresp0/WAVEGO_3D_MODEL"
+        ],
+        "primary_url": "https://github.com/arnaucresp0/WAVEGO_3D_MODEL"
+      },
+      "source_line": 8,
+      "source_msg_id": null
+    },
+    {
+      "sender": "李同学",
+      "sender_id": null,
+      "time": "2026-07-10T11:20:45",
+      "content": "老师，Unity 用哪个版本？",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 12,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-10T11:21:30",
+      "content": "@李同学 Unity 2020.3 LTS，和机械臂案例保持一致。",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 15,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-10T14:26:12",
+      "content": "实验任务总体要求：\n1. 在 Unity 中建立 WAVEGO 虚拟模型，与真实机器狗实现关节角度、IMU 姿态的双向实时同步\n2. 设计通信中间件，实现 Modbus TCP 与 WAVEGO 控制接口的协议转换\n3. 完成\"控制模式\"（虚拟驱动物理）和\"同步模式\"（物理映射虚拟）两种工作方式\n4. 软硬件联调，形成可演示、可考核的数字孪生系统",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 18,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-10T14:30:01",
+      "content": "评分标准：\n- 架构与原理理解 15分\n- Unity 虚拟模型 20分\n- 通信桥接实现 25分\n- 双向同步功能 25分\n- 联调与报告 15分",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 25,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-10T14:32:00",
+      "content": "提交方式：\n- 实验报告 PDF + 工程源码 zip + 演示视频\n- 上传到学习通 + 发我邮箱 zhang@cup.edu.cn\n- 截止时间：2026-07-25 23:59",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 33,
+      "source_msg_id": null
+    },
+    {
+      "sender": "王同学",
+      "sender_id": null,
+      "time": "2026-07-10T14:35:11",
+      "content": "老师，状态反馈怎么获取？WiFi 接口好像只返回空响应。",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 39,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-10T14:38:22",
+      "content": "@王同学 好问题。原厂 WiFi /control 只用于下发指令，确实不回传状态。同步模式要拿到舵机角和 IMU，需要给固件打补丁，让它通过串口 JSON 回传。或者用树莓派网关，串口接 ESP32、网络发布到 :9001。",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 42,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-10T14:40:01",
+      "content": "补丁固件和桥接程序的参考代码我发到群文件了，叫 wavego_twin_patch.zip。",
+      "msg_type": "file",
+      "meta": {
+        "filename": ".zip"
+      },
+      "source_line": 45,
+      "source_msg_id": null
+    },
+    {
+      "sender": "李同学",
+      "sender_id": null,
+      "time": "2026-07-10T15:02:33",
+      "content": "收到，谢谢老师！",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 48,
+      "source_msg_id": null
+    },
+    {
+      "sender": "王同学",
+      "sender_id": null,
+      "time": "2026-07-10T15:03:15",
+      "content": "收到。",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 51,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-11T09:15:00",
+      "content": "推荐一篇文章理解数字孪生三层架构：https://blog.csdn.net/qq_60513199/article/details/136921192\n连杆结构设计讲得很清楚。",
+      "msg_type": "link",
+      "meta": {
+        "urls": [
+          "https://blog.csdn.net/qq_60513199/article/details/136921192"
+        ],
+        "primary_url": "https://blog.csdn.net/qq_60513199/article/details/136921192"
+      },
+      "source_line": 54,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-11T09:16:45",
+      "content": "另外，9g 舵机的花键轴是标准规格，替换零件的连接孔必须兼容这个花键轴固定方式。设计时注意孔径不小于 Φ 2.0 mm。",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 58,
+      "source_msg_id": null
+    },
+    {
+      "sender": "李同学",
+      "sender_id": null,
+      "time": "2026-07-11T10:30:22",
+      "content": "老师，3D 打印推荐什么材料？",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 61,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-11T10:31:50",
+      "content": "@李同学 PLA+ 或 PETG，PETG 强度更好。层厚 0.2mm，填充 30-50%，受力件可以 60%。",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 64,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-12T14:00:00",
+      "content": "提醒：明天下午 3 点在实验室集中答疑，有问题过来。",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 67,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-12T14:01:00",
+      "content": "另外，实验报告模板我发群文件了，叫 实验报告模板.docx，按这个格式写。",
+      "msg_type": "file",
+      "meta": {
+        "filename": ".docx"
+      },
+      "source_line": 70,
+      "source_msg_id": null
+    },
+    {
+      "sender": "王同学",
+      "sender_id": null,
+      "time": "2026-07-13T18:22:11",
+      "content": "固件补丁烧录成功，串口能收到 JSON 了。",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 73,
+      "source_msg_id": null
+    },
+    {
+      "sender": "张老师",
+      "sender_id": null,
+      "time": "2026-07-13T18:25:00",
+      "content": "@王同学 漂亮！现在可以开始做同步模式了。",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": 76,
+      "source_msg_id": null
+    }
+  ]
+}

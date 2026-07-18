@@ -1,0 +1,253 @@
+{
+  "mode": "course-maker",
+  "project_name": "专业实习2026-数字孪生DTS",
+  "deadline": null,
+  "deadline_uncertain": true,
+  "total_messages": 36,
+  "messages_file": "D:/workspace/demo/test_wechat_assistant/chat2work/tests/real_messages.json",
+  "tasks": [
+    {
+      "name": "Grasshopper 插件与圆管建模",
+      "description": "安装 ℠暖阳ۣএ 分享的 intralattice.gha 插件，用 dendov1.zip 搭建圆管样例（插件用途：做圆管的小插件）",
+      "src_msgs": ["msg#0", "msg#1", "msg#2"]
+    },
+    {
+      "name": "3D 建模工具学习（Shapr3D / FreeDO3D）",
+      "description": "学习 Shapr3D（张建兵提问、高冠震确认老师使用）与 FreeDO3D 产品；参考产品页、B站操作视频合集，按需注册并下载运行环境",
+      "src_msgs": ["msg#4", "msg#5", "msg#7"]
+    },
+    {
+      "name": "数字孪生 DTS 平台学习",
+      "description": "跟随飞渡空间智能启航营学习 DTS：地形影像发布（B站案例）、MCP Server（AI 接管数字孪生场景）、Vue 前端模板、让 LLM 理解空间智能",
+      "src_msgs": ["msg#10", "msg#21", "msg#24", "msg#25"]
+    },
+    {
+      "name": "样例系统搭建",
+      "description": "导入 HMr.L 分享的样例系统.zip，作为个人数字孪生场景的起点",
+      "src_msgs": ["msg#32"]
+    },
+    {
+      "name": "参加每日腾讯会议培训并回看录屏",
+      "description": "每天参加辣椒油的快速会议（详见链接库会议日程），回看每日录屏。注意 7/17 13:00-14:00 停电，提前安排。",
+      "src_msgs": ["msg#11", "msg#14", "msg#15", "msg#20", "msg#23", "msg#28", "msg#33", "msg#31"]
+    },
+    {
+      "name": "实习简历投递（可选）",
+      "description": "有实习需求的同学可提交简历（荧光 7/13 发布）",
+      "src_msgs": ["msg#8"]
+    }
+  ],
+  "refs": [
+    {
+      "url": "https://www.freedo3d.com/",
+      "title": "FreeDO3D 产品介绍",
+      "sender": "荧光",
+      "time": "2026-07-12T08:59:32",
+      "why": "3D建模工具产品介绍页",
+      "src_msg": "msg#7"
+    },
+    {
+      "url": "https://space.bilibili.com/484995173",
+      "title": "B站 FreeDO3D 产品操作视频合集",
+      "sender": "荧光",
+      "time": "2026-07-12T08:59:32",
+      "why": "特色功能点和操作详细介绍视频",
+      "src_msg": "msg#7"
+    },
+    {
+      "url": "https://account.freedo3d.com/#/signup?invitation=487457",
+      "title": "FreeDO3D 注册试用",
+      "sender": "荧光",
+      "time": "2026-07-12T08:59:32",
+      "why": "注册账号试用 FreeDO3D",
+      "src_msg": "msg#7"
+    },
+    {
+      "url": "https://dtsdata.g-bim.cn/DTS/downloads/DTS_SystemEnv.exe",
+      "title": "DTS 运行环境下载",
+      "sender": "荧光",
+      "time": "2026-07-12T08:59:32",
+      "why": "DTS 平台运行环境安装程序",
+      "src_msg": "msg#7"
+    },
+    {
+      "url": "https://b23.tv/RMntAMf",
+      "title": "DTS孪创城市-地形影像发布【从0-1数字孪生案例培训】",
+      "sender": "Yang",
+      "time": "2026-07-13T15:12:53",
+      "why": "B站课程，从零学习 DTS 地形影像发布",
+      "src_msg": "msg#10"
+    },
+    {
+      "url": "https://pan.baidu.com/s/1pcYzQu-U-c2T9cu9SuFWhQ?pwd=7x8a",
+      "title": "中国石油大学（北京）DTS培训计划",
+      "sender": "Yang",
+      "time": "2026-07-13T13:58:18",
+      "why": "大学数字孪生平台软件实操培训课程资料（提取码 7x8a）",
+      "src_msg": "msg#9"
+    },
+    {
+      "url": "https://pan.baidu.com/s/1IWgZBqY8nigCCkL8D_fK2Q?pwd=vp2i",
+      "title": "点云倾斜fbx数据",
+      "sender": "Yang",
+      "time": "2026-07-14T09:30:19",
+      "why": "3D点云数据，可用于数字孪生场景建模（提取码 vp2i）",
+      "src_msg": "msg#12"
+    },
+    {
+      "url": "https://pan.baidu.com/s/1j2Gx6nZfMVWNSkO-2RCGHw?pwd=qk16",
+      "title": "DTS_Library_V6.pak",
+      "sender": "Yang",
+      "time": "2026-07-14T09:56:07",
+      "why": "DTS 平台资源库文件包（提取码 qk16）",
+      "src_msg": "msg#13"
+    },
+    {
+      "url": "https://pan.baidu.com/s/1pJYQDE1NNENIxnIVz9NFng?pwd=jrzu",
+      "title": "UI资源",
+      "sender": "荧光",
+      "time": "2026-07-15T12:51:59",
+      "why": "数字孪生项目 UI 组件资源包（提取码 jrzu）",
+      "src_msg": "msg#16"
+    },
+    {
+      "url": "https://pan.baidu.com/s/1zy0_FZlxvds27hNzmgoeig?pwd=kmru",
+      "title": "Assets",
+      "sender": "荧光",
+      "time": "2026-07-15T13:09:10",
+      "why": "Unity 3D 模型资源库（提取码 kmru）",
+      "src_msg": "msg#17"
+    },
+    {
+      "url": "https://pan.baidu.com/s/1ouhLjRQ62oaN8LRwYQAKYQ?pwd=sq2i",
+      "title": "拍照就自动3D建模-大南瓜干货.zip",
+      "sender": "荧光",
+      "time": "2026-07-15T13:26:49",
+      "why": "摄影测量/自动3D建模工具（提取码 sq2i）",
+      "src_msg": "msg#18"
+    },
+    {
+      "url": "https://pan.baidu.com/s/1p3SJbSvD2LXrfIivXSDuAA?pwd=edfk",
+      "title": "Unity3D模型_红色文化展厅模型场景（fbx）",
+      "sender": "荧光",
+      "time": "2026-07-15T13:27:11",
+      "why": "Unity 3D 展厅模型，fbx 格式可直接导入（提取码 edfk）",
+      "src_msg": "msg#19"
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s?__biz=MzE5ODEzMzk4Ng==&mid=2247491290&idx=1&sn=122b43475eea7ebd2b6a9122bdf39378",
+      "title": "从理解到实践：AI迈入空间智能的关键一步（MCP Server）",
+      "sender": "Yang",
+      "time": "2026-07-16T09:53:11",
+      "why": "飞渡空间智能启航营 — AI/DTS MCP Server 实践指南",
+      "src_msg": "msg#21"
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s/H644xTe6lRVlOltTXzWOwQ",
+      "title": "让大语言模型理解空间智能？",
+      "sender": "黑斑吐司シ",
+      "time": "2026-07-16T14:07:36",
+      "why": "LLM + DTS：用自然语言操作数字孪生场景",
+      "src_msg": "msg#24"
+    },
+    {
+      "url": "https://mp.weixin.qq.com/s?__biz=MzE5ODEzMzk4Ng==&mid=2247491060&idx=1&sn=a2818815047bab6479252a668403f7a3",
+      "title": "一步到位的Vue模板，速搭数字孪生项目",
+      "sender": "Yang",
+      "time": "2026-07-16T14:34:29",
+      "why": "Vue 初始化前端模板，快速搭建数字孪生平台项目",
+      "src_msg": "msg#25"
+    },
+    {
+      "url": "https://meeting.tencent.com/dm/gDzNYijsmS5L",
+      "title": "腾讯会议-7/14 09:03 辣椒油的快速会议（460-149-615）",
+      "sender": "Yang",
+      "time": "2026-07-14T09:04:12",
+      "why": "每日培训会议入口",
+      "src_msg": "msg#11"
+    },
+    {
+      "url": "https://meeting.tencent.com/dm/jptagx2M2umy",
+      "title": "腾讯会议-7/14 13:31 辣椒油的快速会议（864-797-603）",
+      "sender": "Yang",
+      "time": "2026-07-14T13:32:11",
+      "why": "每日培训会议入口",
+      "src_msg": "msg#14"
+    },
+    {
+      "url": "https://meeting.tencent.com/dm/xo1Hmr8XKITe",
+      "title": "腾讯会议-7/15 08:59 辣椒油的快速会议（825-959-591）",
+      "sender": "Yang",
+      "time": "2026-07-15T08:59:58",
+      "why": "每日培训会议入口",
+      "src_msg": "msg#15"
+    },
+    {
+      "url": "https://meeting.tencent.com/dm/02StmJ4jR7AI",
+      "title": "腾讯会议-7/16 08:54 辣椒油的快速会议（408-909-968）",
+      "sender": "Yang",
+      "time": "2026-07-16T08:54:59",
+      "why": "每日培训会议入口",
+      "src_msg": "msg#20"
+    },
+    {
+      "url": "https://meeting.tencent.com/dm/vXKqhXZhD8B9",
+      "title": "腾讯会议-7/16 13:59 辣椒油的快速会议（613-964-754）",
+      "sender": "Yang",
+      "time": "2026-07-16T13:59:59",
+      "why": "每日培训会议入口",
+      "src_msg": "msg#23"
+    },
+    {
+      "url": "https://meeting.tencent.com/dm/OzjLll0uTVGb",
+      "title": "腾讯会议-7/17 08:59 辣椒油的快速会议（567-544-968）",
+      "sender": "Yang",
+      "time": "2026-07-17T09:00:01",
+      "why": "每日培训会议入口",
+      "src_msg": "msg#28"
+    },
+    {
+      "url": "https://meeting.tencent.com/dm/0K9mloKNdhpm",
+      "title": "腾讯会议-7/17 14:27 辣椒油的快速会议（650-436-436）",
+      "sender": "Yang",
+      "time": "2026-07-17T14:27:12",
+      "why": "每日培训会议入口",
+      "src_msg": "msg#33"
+    },
+    {
+      "url": "https://meeting.tencent.com/crm/29oyaLWx1e",
+      "title": "会议录屏-7/16 上午",
+      "sender": "Yang",
+      "time": "2026-07-16T13:30:38",
+      "why": "7/16 上午培训会议录屏回看",
+      "src_msg": "msg#22"
+    },
+    {
+      "url": "https://meeting.tencent.com/crm/29oyaLWx48",
+      "title": "会议录屏-7/16（同日上午，周四下午标注）",
+      "sender": "Yang",
+      "time": "2026-07-16T15:36:03",
+      "why": "周四下午会议录屏",
+      "src_msg": "msg#26"
+    },
+    {
+      "url": "https://meeting.tencent.com/crm/2Vb54DAO12",
+      "title": "会议录屏-7/17 上午",
+      "sender": "Yang",
+      "time": "2026-07-17T11:32:33",
+      "why": "7/17 上午会议录屏回看",
+      "src_msg": "msg#29"
+    },
+    {
+      "url": "https://meeting.tencent.com/crm/2Vb54DAO34",
+      "title": "会议录屏-周五下午",
+      "sender": "Yang",
+      "time": "2026-07-17T15:32:39",
+      "why": "周五下午会议录屏",
+      "src_msg": "msg#34"
+    }
+  ],
+  "submission": null,
+  "grading": [],
+  "raw_assets": []
+}

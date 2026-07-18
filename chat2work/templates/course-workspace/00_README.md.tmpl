@@ -1,0 +1,40 @@
+# {{ project_name }}
+
+> 由 Chat2Work 自动生成于 {{ generated_at }}
+> 源聊天记录共 {{ total_messages }} 条消息
+
+## 项目概览
+
+- **Deadline**: {% if deadline %}{{ deadline }}{% if days_left is not none %}（剩余 {{ days_left }} 天）{% endif %}{% else %}未明确，请确认{% endif %}
+- **任务数**: {{ tasks | length }}
+- **参考资料**: {{ refs | length }} 条链接 + 原始资料包目录
+
+## 目录结构
+
+```
+{{ project_name }}/
+├── 00_README.md                  ← 你在这里
+├── 00_文件信息整理.md            每个文件的说明
+├── 00_进度看板.md                todo + deadline 倒计时
+├── 01_任务说明/
+│   ├── 实验任务书.md
+│   └── 评分标准.md
+├── 02_参考资料/
+│   ├── 链接库.md
+│   ├── 设计参考资料大全.md
+│   └── 原始资料包/
+├── 03_我的实现/                  ← Claude Code/WorkBuddy 直接进这里工作
+├── 04_提交/                      最终交付物放这
+└── _provenance/                  消息→文件溯源映射（隐藏）
+```
+
+## 快速开始
+
+1. 看 `00_进度看板.md` 了解当前进度
+2. 看 `01_任务说明/实验任务书.md` 了解要做什么
+3. 进入 `03_我的实现/` 开始干活
+4. 完成后把交付物放到 `04_提交/`
+
+## 溯源
+
+任何文件里的 `[src:msg#xxx]` 标签都可在 `_provenance/msg-to-file.json` 里反查到原始聊天消息。

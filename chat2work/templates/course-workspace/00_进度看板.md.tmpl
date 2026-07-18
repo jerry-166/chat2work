@@ -1,0 +1,42 @@
+# 进度看板
+
+> 由 Chat2Work 自动生成于 {{ generated_at }}
+
+## Deadline
+
+{% if deadline %}
+- **{{ deadline }}** 最终提交{% if days_left is not none and days_left >= 0 %}（剩余 **{{ days_left }}** 天）{% elif days_left is not none and days_left < 0 %}（已过期 {{ -days_left }} 天）{% endif %}
+{% else %}
+- ⚠️ 未从聊天记录中识别到明确 deadline，请向老师确认
+{% endif %}
+
+## 任务清单
+
+{% if tasks %}
+{% for task in tasks %}
+- [ ] {{ task.name }}
+  {% if task.description %}  - {{ task.description }}
+  {% endif %}
+  {% if task.deadline %}  - 子 deadline: {{ task.deadline }}
+  {% endif %}
+{% endfor %}
+{% else %}
+- [ ] 任务待从实验任务书确认
+{% endif %}
+
+## 已完成
+
+- [x] 工作目录已由 Chat2Work 自动生成（{{ generated_at }}）
+
+## 推荐工作顺序
+
+1. 通读 `01_任务说明/实验任务书.md` 了解整体要求
+2. 看 `01_任务说明/评分标准.md` 知道拿分点在哪
+3. 浏览 `02_参考资料/链接库.md` 和 `02_参考资料/原始资料包/`
+4. 进入 `03_我的实现/` 开始动手
+5. 完成后整理到 `04_提交/`
+
+## 进度更新提示
+
+每完成一个任务，把上面的 `- [ ]` 改成 `- [x]` 即可。
+重新运行 `/chat2work` 不会覆盖你的进度勾选（除非显式 `--force`）。

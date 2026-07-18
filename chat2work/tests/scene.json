@@ -1,0 +1,56 @@
+{
+  "mode": "course-maker",
+  "target": null,
+  "detail": {
+    "course_score": 17,
+    "distill_score": 2,
+    "course_hits": [
+      [
+        "实验",
+        "张老师"
+      ],
+      [
+        "课程设计",
+        "张老师"
+      ],
+      [
+        "代码",
+        "张老师"
+      ],
+      [
+        "实验",
+        "张老师"
+      ],
+      [
+        "考核",
+        "张老师"
+      ],
+      [
+        "评分",
+        "张老师"
+      ],
+      [
+        "报告",
+        "张老师"
+      ],
+      [
+        "截止",
+        "张老师"
+      ],
+      [
+        "实验",
+        "张老师"
+      ],
+      [
+        "实验报告",
+        "张老师"
+      ]
+    ],
+    "distill_hits": [],
+    "top_sender": "张老师",
+    "top_sender_ratio": 0.71,
+    "sender_count": 3,
+    "source": "auto-detected"
+  },
+  "messages_file": "tests/messages.json"
+}

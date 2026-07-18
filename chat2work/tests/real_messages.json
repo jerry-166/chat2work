@@ -1,0 +1,431 @@
+{
+  "source_file": "D:\\workspace\\demo\\test_wechat_assistant\\weChatDataAnalysis\\chat_log\\real_test_json\\conversations\\0001_õ©ôõ©Üի×õ¦á2026_58040226786@chatroom_b8c6158e\\messages.json",
+  "total_messages": 36,
+  "senders": {
+    "℠暖阳ۣএ": 4,
+    "张建兵": 1,
+    "高冠震": 1,
+    "错不了的小滑稽": 2,
+    "荧光": 6,
+    "Yang": 20,
+    "黑斑吐司シ": 1,
+    "HMr.L": 1
+  },
+  "msg_types": {
+    "file": 3,
+    "text": 24,
+    "image": 2,
+    "link": 4,
+    "quote": 3
+  },
+  "time_range": {
+    "start": "2026-07-08T10:35:01",
+    "end": "2026-07-17T15:32:53"
+  },
+  "messages": [
+    {
+      "sender": "℠暖阳ۣএ",
+      "sender_id": "wxid_how0a9xkvr3y12",
+      "time": "2026-07-08T10:35:01",
+      "content": "[文件] intralattice.gha",
+      "msg_type": "file",
+      "meta": {
+        "filename": "intralattice.gha",
+        "object_id": ""
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:105"
+    },
+    {
+      "sender": "℠暖阳ۣএ",
+      "sender_id": "wxid_how0a9xkvr3y12",
+      "time": "2026-07-08T15:16:38",
+      "content": "[文件] dendov1.zip",
+      "msg_type": "file",
+      "meta": {
+        "filename": "dendov1.zip",
+        "object_id": ""
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:111"
+    },
+    {
+      "sender": "℠暖阳ۣএ",
+      "sender_id": "wxid_how0a9xkvr3y12",
+      "time": "2026-07-08T15:17:03",
+      "content": "做圆管的小插件",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:112"
+    },
+    {
+      "sender": "℠暖阳ۣএ",
+      "sender_id": "wxid_how0a9xkvr3y12",
+      "time": "2026-07-08T15:19:26",
+      "content": "[图片]",
+      "msg_type": "image",
+      "meta": {
+        "image_md5": "fe83a2431187128f76905c5553daae46",
+        "thumb_url": ""
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:114"
+    },
+    {
+      "sender": "张建兵",
+      "sender_id": "wxid_smdrxpo4dwa611",
+      "time": "2026-07-09T15:49:26",
+      "content": "@李旺 ，今天最后上课老师用的是哪个设计软件？",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:149"
+    },
+    {
+      "sender": "高冠震",
+      "sender_id": "wxid_g4f2yeusua5a",
+      "time": "2026-07-09T16:25:32",
+      "content": "shapr3D",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:152"
+    },
+    {
+      "sender": "错不了的小滑稽",
+      "sender_id": "wxid_dqdzoszyn7e422",
+      "time": "2026-07-10T13:53:33",
+      "content": "[图片]",
+      "msg_type": "image",
+      "meta": {
+        "image_md5": "dd609038905e8ae684723cf82a19fa6a",
+        "thumb_url": ""
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:174"
+    },
+    {
+      "sender": "荧光",
+      "sender_id": "wxid_tretmcwzt3wp21",
+      "time": "2026-07-12T08:59:32",
+      "content": "https://www.freedo3d.com/\n这是产品介绍\nhttps://space.bilibili.com/484995173?spm_id_from=333.337.0.0\n这里是一些产品特色功能点及操作介绍\n\n\n\n注册试用\nhttps://account.freedo3d.com/#/signup?invitation=487457\n\n\n运行环境\n下载程序https://dtsdata.g-bim.cn/DTS/downloads/DTS_SystemEnv.exe",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:179"
+    },
+    {
+      "sender": "荧光",
+      "sender_id": "wxid_tretmcwzt3wp21",
+      "time": "2026-07-13T10:42:22",
+      "content": "有实习需求的同学可以提交简历",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:194"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-13T13:58:18",
+      "content": "通过网盘分享的文件：中国石油大学（北京）\n链接: https://pan.baidu.com/s/1pcYzQu-U-c2T9cu9SuFWhQ?pwd=7x8a 提取码: 7x8a \n--来自百度网盘超级会员v8的分享",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:200"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-13T15:12:53",
+      "content": "DTS孪创城市-地形影像发布【从0-1数字孪生案例培训】 [来源: 哔哩哔哩] (UP主：数字孪生启航营\n播放：1258)",
+      "msg_type": "link",
+      "meta": {
+        "primary_url": "https://b23.tv/RMntAMf?share_medium=android&share_source=weixin&bbid=XU208B82A28EA01FC0884C2CE9B815EA21F04&ts=1783926762962",
+        "title": "DTS孪创城市-地形影像发布【从0-1数字孪生案例培训】",
+        "source_platform": "哔哩哔哩",
+        "url": "https://b23.tv/RMntAMf?share_medium=android&share_source=weixin&bbid=XU208B82A28EA01FC0884C2CE9B815EA21F04&ts=1783926762962"
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:204"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-14T09:04:12",
+      "content": "辣椒油 邀请您参加腾讯会议\n会议主题：辣椒油的快速会议\n会议时间：2026/07/14 09:03-10:03 (GMT+08:00) 中国标准时间 - 北京\n\n点击链接直接加入会议：\nhttps://meeting.tencent.com/dm/gDzNYijsmS5L\n\n#腾讯会议：460-149-615\n\n复制该信息，打开手机腾讯会议即可参与",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:189"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-14T09:30:19",
+      "content": "通过网盘分享的文件：点云倾斜fbx数据\n链接: https://pan.baidu.com/s/1IWgZBqY8nigCCkL8D_fK2Q?pwd=vp2i 提取码: vp2i \n--来自百度网盘超级会员v8的分享",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:190"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-14T09:56:07",
+      "content": "通过网盘分享的文件：DTS_Library_V6.pak\n链接: https://pan.baidu.com/s/1j2Gx6nZfMVWNSkO-2RCGHw?pwd=qk16 提取码: qk16 \n--来自百度网盘超级会员v8的分享",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:191"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-14T13:32:11",
+      "content": "辣椒油 邀请您参加腾讯会议\n会议主题：辣椒油的快速会议\n会议时间：2026/07/14 13:31-14:31 (GMT+08:00) 中国标准时间 - 北京\n\n点击链接直接加入会议：\nhttps://meeting.tencent.com/dm/jptagx2M2umy\n\n#腾讯会议：864-797-603\n\n复制该信息，打开手机腾讯会议即可参与",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:193"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-15T08:59:58",
+      "content": "辣椒油 邀请您参加腾讯会议\n会议主题：辣椒油的快速会议\n会议时间：2026/07/15 08:59-09:59 (GMT+08:00) 中国标准时间 - 北京\n\n点击链接直接加入会议：\nhttps://meeting.tencent.com/dm/xo1Hmr8XKITe\n\n#腾讯会议：825-959-591\n\n复制该信息，打开手机腾讯会议即可参与",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:228"
+    },
+    {
+      "sender": "荧光",
+      "sender_id": "wxid_tretmcwzt3wp21",
+      "time": "2026-07-15T12:51:59",
+      "content": "通过网盘分享的文件：UI资源\n链接: https://pan.baidu.com/s/1pJYQDE1NNENIxnIVz9NFng 提取码: jrzu \n--来自百度网盘超级会员v10的分享",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:230"
+    },
+    {
+      "sender": "荧光",
+      "sender_id": "wxid_tretmcwzt3wp21",
+      "time": "2026-07-15T13:09:10",
+      "content": "通过网盘分享的文件：Assets\n链接: https://pan.baidu.com/s/1zy0_FZlxvds27hNzmgoeig 提取码: kmru \n--来自百度网盘超级会员v10的分享",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:231"
+    },
+    {
+      "sender": "荧光",
+      "sender_id": "wxid_tretmcwzt3wp21",
+      "time": "2026-07-15T13:26:49",
+      "content": "通过网盘分享的文件：拍照就自动3D建模-大南瓜干货.zip等2个文件\n链接: https://pan.baidu.com/s/1ouhLjRQ62oaN8LRwYQAKYQ 提取码: sq2i \n--来自百度网盘超级会员v10的分享",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:232"
+    },
+    {
+      "sender": "荧光",
+      "sender_id": "wxid_tretmcwzt3wp21",
+      "time": "2026-07-15T13:27:11",
+      "content": "通过网盘分享的文件：Unity3D模型_3D15_红色文化展厅模型场景fbx格式直接导入Unity\n链接: https://pan.baidu.com/s/1p3SJbSvD2LXrfIivXSDuAA 提取码: edfk \n--来自百度网盘超级会员v10的分享",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:233"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-16T08:54:59",
+      "content": "辣椒油 邀请您参加腾讯会议\n会议主题：辣椒油的快速会议\n会议时间：2026/07/16 08:54-09:54 (GMT+08:00) 中国标准时间 - 北京\n\n点击链接直接加入会议：\nhttps://meeting.tencent.com/dm/02StmJ4jR7AI\n\n#腾讯会议：408-909-968\n\n复制该信息，打开手机腾讯会议即可参与",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:210"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-16T09:53:11",
+      "content": "从理解到实践：AI迈入空间智能的关键一步 [来源: 飞渡空间智能启航营] (从\"远处指导\"到\"切实触及\"你的数字孪生场景，让 AI 直接接管你的实例！查文档、调接口，或是直接实现复杂需求？一个 MCP Server，让你的 AI 触手可及。)",
+      "msg_type": "link",
+      "meta": {
+        "primary_url": "https://mp.weixin.qq.com/s?__biz=MzE5ODEzMzk4Ng==&mid=2247491290&idx=1&sn=122b43475eea7ebd2b6a9122bdf39378&chksm=9775528c595ce14d26af8bfa9c8baeefd85de3c4efd43870337c0975ecaf987611fb7edc26b3&mpshare=1&scene=1&srcid=0716pIZYQLSMlLcEPLNPBCjd&sharer_shareinfo=ae84931e0576e858365618ea83437faf&sharer_shareinfo_first=ae84931e0576e858365618ea83437faf#rd",
+        "title": "从理解到实践：AI迈入空间智能的关键一步",
+        "source_platform": "飞渡空间智能启航营",
+        "url": "https://mp.weixin.qq.com/s?__biz=MzE5ODEzMzk4Ng==&mid=2247491290&idx=1&sn=122b43475eea7ebd2b6a9122bdf39378&chksm=9775528c595ce14d26af8bfa9c8baeefd85de3c4efd43870337c0975ecaf987611fb7edc26b3&mpshare=1&scene=1&srcid=0716pIZYQLSMlLcEPLNPBCjd&sharer_shareinfo=ae84931e0576e858365618ea83437faf&sharer_shareinfo_first=ae84931e0576e858365618ea83437faf#rd"
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:212"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-16T13:30:38",
+      "content": "录制: 辣椒油的快速会议\n日期: 2026-07-16 09:06:35\n录制文件：https://meeting.tencent.com/crm/29oyaLWx1e\n今天上午的会议录屏",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:214"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-16T13:59:59",
+      "content": "辣椒油 邀请您参加腾讯会议\n会议主题：辣椒油的快速会议\n会议时间：2026/07/16 13:59-14:59 (GMT+08:00) 中国标准时间 - 北京\n\n点击链接直接加入会议：\nhttps://meeting.tencent.com/dm/vXKqhXZhD8B9\n\n#腾讯会议：613-964-754\n\n复制该信息，打开手机腾讯会议即可参与",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:215"
+    },
+    {
+      "sender": "黑斑吐司シ",
+      "sender_id": "wxid_8ap972jyk39e22",
+      "time": "2026-07-16T14:07:36",
+      "content": "让大语言模型理解空间智能？ [来源: 飞渡空间智能启航营] (项目搭建、接口查询，现在一句话搞定！让你的 AI 直接\"理解\"DTS 开发体系，从此告别繁琐的脚手架配置和重复的文档翻阅。)",
+      "msg_type": "link",
+      "meta": {
+        "primary_url": "https://mp.weixin.qq.com/s/H644xTe6lRVlOltTXzWOwQ",
+        "title": "让大语言模型理解空间智能？",
+        "source_platform": "飞渡空间智能启航营",
+        "url": "https://mp.weixin.qq.com/s/H644xTe6lRVlOltTXzWOwQ"
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:216"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-16T14:34:29",
+      "content": "一步到位的Vue模板，速搭数字孪生项目 [来源: 飞渡空间智能启航营] (提供完整的Vue初始化前端开发模板，协助开发者快速搭建数字孪生平台项目。)",
+      "msg_type": "link",
+      "meta": {
+        "primary_url": "https://mp.weixin.qq.com/s?__biz=MzE5ODEzMzk4Ng==&mid=2247491060&idx=1&sn=a2818815047bab6479252a668403f7a3&chksm=972ce997b6c2ddee95f5e847f8a9af4d944e75e92939c276290a058b698a0a17e1e5016238c0&mpshare=1&scene=1&srcid=0716NVqYluG48ccYVfaerM47&sharer_shareinfo=01a00891acf3df5cfc7e1842477af874&sharer_shareinfo_first=01a00891acf3df5cfc7e1842477af874#rd",
+        "title": "一步到位的Vue模板，速搭数字孪生项目",
+        "source_platform": "飞渡空间智能启航营",
+        "url": "https://mp.weixin.qq.com/s?__biz=MzE5ODEzMzk4Ng==&mid=2247491060&idx=1&sn=a2818815047bab6479252a668403f7a3&chksm=972ce997b6c2ddee95f5e847f8a9af4d944e75e92939c276290a058b698a0a17e1e5016238c0&mpshare=1&scene=1&srcid=0716NVqYluG48ccYVfaerM47&sharer_shareinfo=01a00891acf3df5cfc7e1842477af874&sharer_shareinfo_first=01a00891acf3df5cfc7e1842477af874#rd"
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:217"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-16T15:36:03",
+      "content": "录制: 辣椒油的快速会议\n日期: 2026-07-16 09:06:35\n录制文件：https://meeting.tencent.com/crm/29oyaLWx48",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:220"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-16T15:36:18",
+      "content": "周四下午会议录屏",
+      "msg_type": "quote",
+      "meta": {
+        "quote_sender": "",
+        "quote_content": ""
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:221"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-17T09:00:01",
+      "content": "辣椒油 邀请您参加腾讯会议\n会议主题：辣椒油的快速会议\n会议时间：2026/07/17 08:59-09:59 (GMT+08:00) 中国标准时间 - 北京\n\n点击链接直接加入会议：\nhttps://meeting.tencent.com/dm/OzjLll0uTVGb\n\n#腾讯会议：567-544-968\n\n复制该信息，打开手机腾讯会议即可参与",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:247"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-17T11:32:33",
+      "content": "录制: 辣椒油的快速会议\n日期: 2026-07-17 09:00:09\n录制文件：https://meeting.tencent.com/crm/2Vb54DAO12",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:251"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-17T11:32:42",
+      "content": "周五上午会议录屏",
+      "msg_type": "quote",
+      "meta": {
+        "quote_sender": "",
+        "quote_content": ""
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:252"
+    },
+    {
+      "sender": "错不了的小滑稽",
+      "sender_id": "wxid_dqdzoszyn7e422",
+      "time": "2026-07-17T12:04:00",
+      "content": "大家注意一下一会13：00到14：00要停电",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:253"
+    },
+    {
+      "sender": "HMr.L",
+      "sender_id": "wxid_5zj61ylx887v22",
+      "time": "2026-07-17T14:23:56",
+      "content": "[文件] 样例系统.zip",
+      "msg_type": "file",
+      "meta": {
+        "filename": "样例系统.zip",
+        "object_id": ""
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:254"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-17T14:27:12",
+      "content": "辣椒油 邀请您参加腾讯会议\n会议主题：辣椒油的快速会议\n会议时间：2026/07/17 14:27-15:27 (GMT+08:00) 中国标准时间 - 北京\n\n点击链接直接加入会议：\nhttps://meeting.tencent.com/dm/0K9mloKNdhpm\n\n#腾讯会议：650-436-436\n\n复制该信息，打开手机腾讯会议即可参与",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:255"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-17T15:32:39",
+      "content": "录制: 辣椒油的快速会议\n日期: 2026-07-17 09:00:09\n录制文件：https://meeting.tencent.com/crm/2Vb54DAO34",
+      "msg_type": "text",
+      "meta": {},
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:256"
+    },
+    {
+      "sender": "Yang",
+      "sender_id": "wxid_21veotaeo8ju22",
+      "time": "2026-07-17T15:32:53",
+      "content": "周五下午会议录屏",
+      "msg_type": "quote",
+      "meta": {
+        "quote_sender": "",
+        "quote_content": ""
+      },
+      "source_line": null,
+      "source_msg_id": "message_0:Msg_9ae6cefa1b8ce3aeddb5ca60ec6034d5:257"
+    }
+  ]
+}

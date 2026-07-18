@@ -1,0 +1,61 @@
+# 链接库
+
+> 由 Chat2Work 自动整理
+> 每条链接带发送者、时间、上下文说明，方便回查
+> 生成时间：{{ generated_at }}
+
+---
+
+## 链接清单（共 {{ refs | length }} 条）
+
+{% if refs %}
+| # | URL | 标题 | 发送者 | 时间 | 为什么发 |
+|---|-----|------|--------|------|----------|
+{% for ref in refs %}
+| {{ loop.index }} | {{ ref.url }} | {{ ref.title | default('-') }} | {{ ref.sender }} | {{ ref.time }} | {{ ref.why | default('-') }} |
+{% endfor %}
+{% else %}
+暂无链接。可能原因：聊天记录中无人发链接，或 parser 未能识别。
+{% endif %}
+
+---
+
+## 按发送者分组
+
+{% if refs %}
+{% set senders = refs | map(attribute='sender') | unique | list %}
+{% for sender in senders %}
+### {{ sender }}
+{% for ref in refs if ref.sender == sender %}
+- {{ ref.url }}{% if ref.title %} — {{ ref.title }}{% endif %}（{{ ref.time }}）{% if ref.why %}：{{ ref.why }}{% endif %}
+{% endfor %}
+
+{% endfor %}
+{% endif %}
+
+---
+
+## 按类型分组
+
+{% if refs %}
+{% set ns = namespace(github=0, mp=0, wiki=0, other=0) %}
+{% for ref in refs %}
+{%- if 'github.com' in ref.url %}{% set ns.github = ns.github + 1 %}
+{% elif 'mp.weixin.qq.com' in ref.url %}{% set ns.mp = ns.mp + 1 %}
+{% elif 'wiki' in ref.url or 'docs' in ref.url %}{% set ns.wiki = ns.wiki + 1 %}
+{% else %}{% set ns.other = ns.other + 1 %}
+{% endif -%}
+{% endfor %}
+- GitHub 仓库：{{ ns.github }} 条
+- 公众号文章：{{ ns.mp }} 条
+- Wiki/文档：{{ ns.wiki }} 条
+- 其他：{{ ns.other }} 条
+{% endif %}
+
+---
+
+## 使用建议
+
+- 链接失效？复制 URL 到 Wayback Machine（https://web.archive.org）查历史快照
+- 想批量收藏？把上表复制到 Notion / Obsidian / 浏览器书签
+- `[src:msg#xxx]` 标签可在 `_provenance/msg-to-file.json` 反查原始消息上下文

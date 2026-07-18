@@ -1,0 +1,30 @@
+# Chat data (private)
+chat_log/
+
+# Third-party tools
+tool-WeChatMsg/
+weChatDataAnalysis/
+
+# Test outputs
+**/tests/output*/
+**/tests/output_real*/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE / WorkBuddy
+.workbuddy/
+.claude/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Archives
+*.zip
+*.rar
