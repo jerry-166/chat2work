@@ -81,3 +81,18 @@ def test_extract_dates_relative_marks_uncertain():
     next_week = next(d for d in rels if d['msg_index'] == 6)
     assert next_week['absolute'] == '2026-07-22'
     assert '下周' in next_week['raw']
+
+
+def test_extract_meeting_code():
+    """腾讯会议号 460-149-615 要抽出。"""
+    result = extract_all(load_messages())
+    codes = [m['code'] for m in result['meeting_codes']]
+    assert '460-149-615' in codes
+    meeting = next(m for m in result['meeting_codes'] if m['code'] == '460-149-615')
+    assert meeting['msg_index'] == 1
+
+
+def test_extract_all_returns_full_structure():
+    """extract_all 返回 4 个顶层 key。"""
+    result = extract_all(load_messages())
+    assert set(result.keys()) == {'links', 'files', 'dates', 'meeting_codes'}

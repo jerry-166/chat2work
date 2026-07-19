@@ -11,8 +11,12 @@ Chat2Work extractor — 从 messages.json 全量抽取客观字段。
 每条结果带 msg_index,可回指 messages.json 的下标做溯源。
 """
 
+import argparse
+import json
 import re
+import sys
 from datetime import datetime, timedelta
+from pathlib import Path
 
 
 # 链接:保留完整 query string(?pwd=xxx 不截断)。停在空白/中文标点/引号/括号
@@ -87,11 +91,20 @@ def _extract_dates(content: str, msg_time: str) -> list[dict]:
     return dates
 
 
+# 腾讯会议号:8-13 位数字(可含连字符)
+MEETING_CODE_PATTERN = re.compile(r'(?:腾讯会议号|#腾讯会议)[:：]?\s*([\d-]{8,})')
+
+
+def _extract_meeting_codes(content: str) -> list[str]:
+    return [m.strip() for m in MEETING_CODE_PATTERN.findall(content)]
+
+
 def extract_all(messages: list[dict]) -> dict:
     """从 messages 数组抽取所有客观字段。返回 extracted 结构。"""
     links = []
     files = []
     dates = []
+    meeting_codes = []
     for idx, msg in enumerate(messages):
         content = msg.get('content', '') or ''
         msg_time = msg.get('time', '') or ''
@@ -110,4 +123,39 @@ def extract_all(messages: list[dict]) -> dict:
         for d in _extract_dates(content, msg_time):
             d['msg_index'] = idx
             dates.append(d)
-    return {'links': links, 'files': files, 'dates': dates, 'meeting_codes': []}
+        for code in _extract_meeting_codes(content):
+            meeting_codes.append({
+                'code': code,
+                'msg_index': idx,
+                'sender': msg.get('sender'),
+                'time': msg.get('time'),
+            })
+    return {'links': links, 'files': files, 'dates': dates, 'meeting_codes': meeting_codes}
+
+
+def main():
+    ap = argparse.ArgumentParser(description='Chat2Work extractor — 客观字段规则提取')
+    ap.add_argument('messages_file', help='parser 输出的 messages.json')
+    ap.add_argument('-o', '--output', default='extracted.json', help='输出 JSON 路径')
+    args = ap.parse_args()
+
+    path = Path(args.messages_file)
+    if not path.exists():
+        print(f'错误:文件不存在 {path}', file=sys.stderr)
+        sys.exit(1)
+
+    data = json.loads(path.read_text(encoding='utf-8'))
+    messages = data['messages'] if isinstance(data, dict) else data
+    result = extract_all(messages)
+
+    out_path = Path(args.output)
+    out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
+    print(f'[*] 提取完成: {len(result["links"])} 链接, '
+          f'{len(result["files"])} 文件, '
+          f'{len(result["dates"])} 日期, '
+          f'{len(result["meeting_codes"])} 会议号', file=sys.stderr)
+    print(f'[*] 输出: {out_path}', file=sys.stderr)
+
+
+if __name__ == '__main__':
+    main()
