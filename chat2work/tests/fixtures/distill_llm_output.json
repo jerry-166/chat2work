@@ -1,0 +1,79 @@
+{
+  "mode": "person-distiller",
+  "target_name": "Yang",
+  "target_actual_name": "Yang",
+  "source_file": "tests/fixtures/distill_yang_messages.json",
+  "message_count": 20,
+  "time_range_start": "2026-07-13T21:58:18+08:00",
+  "time_range_end": "2026-07-17T23:32:53+08:00",
+  "speech_style": "极度简洁实用，几乎不闲聊。每条消息都是资源链接或会议邀请，没有寒暄和情绪表达。标点规范，使用完整句式。示例：'通过网盘分享的文件：DTS_Library_V6.pak 链接: ...' / '周四下午会议录屏'",
+  "catchphrases": [
+    "辣椒油 邀请您参加腾讯会议",
+    "录制: 辣椒油的快速会议",
+    "通过网盘分享的文件"
+  ],
+  "expression_habits": "完全以资源分发为导向，不使用类比、代码示例或要点列举。消息结构固定：标题+链接+提取码（网盘）或 主题+时间+链接+会议号（腾讯会议）。偶尔有简短的录屏说明（如'周四下午会议录屏'）。",
+  "qa_pattern": "群聊中未观察到回答提问的场景，发言纯粹是主动分发资源和组织会议。",
+  "evaluation_focus": "未观察到评估方案的场景，发言以工具分享为主。",
+  "knowledge_domains": [
+    {
+      "name": "数字孪生",
+      "topics": ["DTS_Library", "点云倾斜fbx数据", "数字孪生启航营", "Vue 前端模板"],
+      "references": ["DTS_Library_V6.pak", "点云倾斜fbx数据", "数字孪生启航营 UP主"],
+      "example": "通过网盘分享的文件：DTS_Library_V6.pak 链接: https://pan.baidu.com/s/1j2Gx6nZfMVWNSkO-2RCGHw?pwd=qk16 提取码: qk16"
+    },
+    {
+      "name": "MCP Server / AI Agent 接管",
+      "topics": ["MCP Server", "AI 接管实例", "数字孪生场景控制"],
+      "references": ["MCP Server 概念"],
+      "example": "从'远处指导'到'切实触及'你的数字孪生场景，让 AI 直接接管你的实例！查文档、调接口，或是直接实现复杂需求？一个 MCP Server，让你的 AI 触手可及。"
+    },
+    {
+      "name": "线上会议组织",
+      "topics": ["腾讯会议", "会议录屏", "日常例会"],
+      "references": ["腾讯会议", "会议录屏回放"],
+      "example": "辣椒油 邀请您参加腾讯会议 会议主题：辣椒油的快速会议 会议时间：2026/07/14 09:03-10:03"
+    }
+  ],
+  "recommended_resources": [
+    {
+      "name": "DTS_Library_V6.pak",
+      "url": "https://pan.baidu.com/s/1j2Gx6nZfMVWNSkO-2RCGHw?pwd=qk16",
+      "reason": "数字孪生核心资源包，Yang 主动分享"
+    },
+    {
+      "name": "点云倾斜fbx数据",
+      "url": "https://pan.baidu.com/s/1IWgZBqY8nigCCkL8D_fK2Q?pwd=vp2i",
+      "reason": "点云数据处理示例数据"
+    },
+    {
+      "name": "Vue 数字孪生前端模板",
+      "url": "",
+      "reason": "提供完整的Vue初始化前端开发模板，协助开发者快速搭建数字孪生平台项目"
+    },
+    {
+      "name": "数字孪生启航营",
+      "url": "",
+      "reason": "UP主频道，播放量 1258，数字孪生教学资源"
+    }
+  ],
+  "tech_preference": "偏好实操工具与即时可用的资源包（.pak 文件、fbx 数据、Vue 模板）。强调'快速搭建'和'触手可及'，倾向低门槛的工程化方案。对 MCP Server 等 AI Agent 接入方案有布道热情。",
+  "problem_solving_path": "1. 组织线上会议同步信息 → 2. 分享网盘资料供下载 → 3. 会后发布录屏回放。每天固定 2 次会议（上午 9 点 + 下午 2 点），形成稳定的协作节奏。持续 4 天（7/14-7/17）。",
+  "review_focus": [
+    "资源是否即时可用（提取码、链接完整性）",
+    "会议时间是否固定规律（便于参与者安排）",
+    "录屏是否及时发布（会后当天）"
+  ],
+  "suitable_questions": [
+    "数字孪生项目如何快速搭建",
+    "DTS_Library 的使用方法",
+    "MCP Server 如何让 AI 接管数字孪生实例",
+    "点云倾斜数据如何处理",
+    "Vue 数字孪生前端模板的结构"
+  ],
+  "unsuitable_questions": [
+    "非数字孪生/UE 领域的技术问题",
+    "需要深度讨论或长时间交流的话题（Yang 发言模式偏分发而非讨论）",
+    "需要最新信息的问题（画像基于 2026-07 数据）"
+  ]
+}

@@ -21,11 +21,27 @@ llm_output.json 结构（course-maker）：
   "messages_file": "messages.json"  # 用于 provenance
 }
 
-llm_output.json 结构（person-distiller）：
+llm_output.json 结构（person-distiller，路径 1 起改为结构化 JSON）：
 {
   "mode": "person-distiller",
   "target_name": "张老师",
-  "soul_content": "...SOUL.md 全文..."
+  "target_actual_name": "张老师",
+  "source_file": "messages.json",
+  "message_count": 20,
+  "time_range_start": "2026-07-13T13:58:18",
+  "time_range_end": "2026-07-17T15:32:53",
+  "speech_style": "...",
+  "catchphrases": ["..."],
+  "expression_habits": "...",
+  "qa_pattern": "...",
+  "evaluation_focus": "...",
+  "knowledge_domains": [{"name": "...", "topics": [...], "references": [...], "example": "..."}],
+  "recommended_resources": [{"name": "...", "url": "...", "reason": "..."}],
+  "tech_preference": "...",
+  "problem_solving_path": "...",
+  "review_focus": ["..."],
+  "suitable_questions": ["..."],
+  "unsuitable_questions": ["..."]
 }
 """
 
@@ -328,13 +344,46 @@ def build_course_workspace(llm_output: dict, target_dir: Path, skill_dir: Path) 
 
 # ---------- person-distiller 实体化 ----------
 
-def build_persona(llm_output: dict, target_dir: Path) -> Path:
-    """把 SOUL.md 内容写成单个文件。"""
-    target_name = llm_output.get('target_name', 'unknown')
-    soul_content = llm_output.get('soul_content', '')
+def build_persona(llm_output: dict, target_dir: Path, skill_dir: Path = None) -> Path:
+    """用 jinja2 渲染 SOUL.md.tmpl，写成 so-{name}.md。
 
-    if not soul_content:
-        raise ValueError("llm_output.soul_content 为空")
+    路径 1 阶段：LLM 输出结构化 JSON（而非 markdown 全文），builder 用 jinja2 渲染模板。
+    后续路径 2 会扩展为 6 层结构 + Correction + 归档。
+    """
+    target_name = llm_output.get('target_name', 'unknown')
+
+    # 推断 skill_dir（向后兼容：未传时用 __file__ 推断）
+    if skill_dir is None:
+        skill_dir = Path(__file__).parent.parent
+
+    # 准备模板上下文（字段对齐 SOUL.md.tmpl 的变量名）
+    context = {
+        'target_name': target_name,
+        'target_actual_name': llm_output.get('target_actual_name', target_name),
+        'source_file': llm_output.get('source_file', ''),
+        'message_count': llm_output.get('message_count', 0),
+        'time_range_start': llm_output.get('time_range_start', ''),
+        'time_range_end': llm_output.get('time_range_end', ''),
+        'generated_at': datetime.now().strftime('%Y-%m-%d'),
+        'speech_style': llm_output.get('speech_style', ''),
+        'catchphrases': llm_output.get('catchphrases', []),
+        'expression_habits': llm_output.get('expression_habits', ''),
+        'qa_pattern': llm_output.get('qa_pattern', ''),
+        'evaluation_focus': llm_output.get('evaluation_focus', ''),
+        'knowledge_domains': llm_output.get('knowledge_domains', []),
+        'recommended_resources': llm_output.get('recommended_resources', []),
+        'tech_preference': llm_output.get('tech_preference', ''),
+        'problem_solving_path': llm_output.get('problem_solving_path', ''),
+        'review_focus': llm_output.get('review_focus', []),
+        'suitable_questions': llm_output.get('suitable_questions', []),
+        'unsuitable_questions': llm_output.get('unsuitable_questions', []),
+    }
+
+    templates_dir = skill_dir / 'templates' / 'persona'
+    if not (templates_dir / 'SOUL.md.tmpl').exists():
+        raise FileNotFoundError(f"SOUL.md.tmpl 模板不存在: {templates_dir / 'SOUL.md.tmpl'}")
+
+    soul_content = render_template('SOUL.md.tmpl', context, templates_dir)
 
     safe_name = ''.join(c for c in target_name if c not in '/\\:*?"<>|').strip()
     out_path = target_dir / f'so-{safe_name}.md'
@@ -377,7 +426,7 @@ def main():
         print(f"\n搞定啦~ 工作目录已生成: {project_dir}", file=sys.stderr)
         print(f"原聊天记录文件你自己看着删哦，我怕删错~", file=sys.stderr)
     elif mode == 'distill':
-        persona_path = build_persona(llm_output, target_dir)
+        persona_path = build_persona(llm_output, target_dir, skill_dir)
         print(f"\n搞定啦~ 人物画像已生成: {persona_path}", file=sys.stderr)
         print(f"原聊天记录文件你自己看着删哦，我怕删错~", file=sys.stderr)
     else:

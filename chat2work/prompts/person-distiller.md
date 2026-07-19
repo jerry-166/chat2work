@@ -46,64 +46,43 @@ output_schema: soul_md
 
 # Output Format
 
-输出一段完整的 SOUL.md 内容（markdown 格式），结构如下。**直接输出 markdown 全文，不要包裹在 JSON 里，不要加代码块**。
+输出严格 JSON（不要包裹在 markdown 代码块里，不要加任何说明文字），字段对齐 SOUL.md.tmpl 模板变量：
 
-```markdown
----
-name: so-zhang
-summary: 从课程群聊蒸馏的人物画像
-distilled_from: <源聊天记录文件名>
-distilled_at: <YYYY-MM-DD>
-target_actual_name: <实际匹配到的人物名>
-message_count: <消息条数>
----
+{
+  "mode": "person-distiller",
+  "target_name": "<目标人物名>",
+  "target_actual_name": "<实际匹配到的人物名>",
+  "source_file": "<源聊天记录文件名>",
+  "message_count": <消息条数>,
+  "time_range_start": "<ISO 8601 起始时间>",
+  "time_range_end": "<ISO 8601 结束时间>",
+  "speech_style": "<语气+长度+标点 emoji 习惯，附 1-2 条原文示例>",
+  "catchphrases": ["<口头禅1>", "<口头禅2>"],
+  "expression_habits": "<喜欢代码示例/类比/列要点？>",
+  "qa_pattern": "<回答提问时的模式>",
+  "evaluation_focus": "<评估方案时的关注点>",
+  "knowledge_domains": [
+    {"name": "<领域>", "topics": ["..."], "references": ["..."], "example": "<脱敏原文>"}
+  ],
+  "recommended_resources": [
+    {"name": "<资源>", "url": "<url>", "reason": "<为什么推荐>"}
+  ],
+  "tech_preference": "<技术选型倾向>",
+  "problem_solving_path": "<问题处理步骤>",
+  "review_focus": ["<关注点1>", "<关注点2>"],
+  "suitable_questions": ["<适合问1>"],
+  "unsuitable_questions": ["<不适合问1>"]
+}
 
-# {{target_name}} — 数字分身
+字段说明：
+- speech_style：自然语言描述，附 1-2 条脱敏原文示例
+- catchphrases：出现 ≥3 次的固定表达，2-3 个
+- knowledge_domains：常讨论主题 + 引用资源 + 典型发言示例
+- recommended_resources：从 extractor 的 extracted.links 提取的推荐资源
+- review_focus：评估方案时的关注点列表
+- suitable_questions/unsuitable_questions：使用建议
 
-## Persona（人物性格）
-
-### 说话风格
-- 语气：<具体描述，附 1-2 条原文示例>
-- 口头禅：<列出 2-3 个>
-- 表达习惯：<具体描述>
-
-### 沟通偏好
-- 回答提问时：<模式>
-- 评估方案时：<关注点>
-
-## Work Skill（工作能力）
-
-### 核心知识领域
-1. <领域 1>
-   - 常讨论：<具体主题>
-   - 引用：<书/工具/概念>
-2. <领域 2>
-   ...
-
-### 推荐资源
-- <资源 1>：<为什么推荐>
-- <资源 2>：<为什么推荐>
-
-## 决策模式
-
-### 技术选型倾向
-<描述 + 示例>
-
-### 问题处理路径
-<遇到某类问题时的典型处理步骤>
-
-## 使用建议
-
-调用此 expert 时，适合问：
-- <问题类型 1>
-- <问题类型 2>
-
-不适合问：
-- <超出此人知识范围的话题>
-
-## 溯源
-本画像蒸馏自 <消息条数> 条群聊发言，时间跨度 <开始>-<结束>。
-```
+builder 会用 jinja2 把这些字段渲染到 templates/persona/SOUL.md.tmpl，产出 so-{name}.md。
 
 # Edge Cases
 
@@ -115,9 +94,8 @@ message_count: <消息条数>
 
 # 行为约束
 
-- 输出纯 markdown，不要 JSON 包裹
+- 输出严格 JSON（不要 markdown 代码块包裹，不要加任何说明文字）
 - 每条观察尽量附 1 条原文示例（脱敏后），增强可验证性
 - 不要编造目标人物没说过的内容，宁可留空
-- name 字段用 `so-<拼音或英文短名>` 格式
-- summary 字段一句话说明来源
-- 输出的 SOUL.md 应该能直接被 Claude Code 当 expert 加载
+- target_name 填实际人物名（builder 会自动加 so- 前缀并清洗非法字符）
+- 输出的 JSON 会被 builder 用 jinja2 渲染成 SOUL.md，最终能被 Claude Code 当 expert 加载
