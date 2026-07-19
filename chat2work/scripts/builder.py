@@ -160,6 +160,35 @@ def build_course_workspace(llm_output: dict, target_dir: Path, skill_dir: Path) 
     raw_assets = llm_output.get('raw_assets', []) or []
     raw_assets_meta = llm_output.get('raw_assets_meta', []) or []
 
+    extracted_file = llm_output.get('extracted_file')
+    extracted = {}
+    if extracted_file and Path(extracted_file).exists():
+        try:
+            extracted = json.loads(Path(extracted_file).read_text(encoding='utf-8'))
+            print(f"  [+] 载入 extracted: "
+                  f"{len(extracted.get('links', []))} 链接", file=sys.stderr)
+        except Exception as e:
+            print(f"  [!] extracted 载入失败: {e}", file=sys.stderr)
+
+    # 链接主表:以 extracted.links 为准(规则保证不丢),refs 只贡献语义字段
+    merged_links = []
+    ref_by_url = {r.get('url'): r for r in refs if r.get('url')}
+    for link in extracted.get('links', []):
+        url = link.get('url')
+        ref = ref_by_url.get(url, {})
+        merged_links.append({
+            'url': url,
+            'title': ref.get('title', ''),
+            'sender': link.get('sender') or ref.get('sender', ''),
+            'time': link.get('time') or ref.get('time', ''),
+            'why': ref.get('why', '[未标注]'),
+            'extract_code': link.get('extract_code'),
+            'src_msg': f"msg#{link.get('msg_index')}" if link.get('msg_index') is not None else (ref.get('src_msg', '')),
+        })
+    # extracted 缺失时退回 refs(v1 行为,不破坏)
+    if not merged_links:
+        merged_links = refs
+
     # 安全清理项目名（去掉路径分隔符等）
     safe_name = ''.join(c for c in project_name if c not in '/\\:*?"<>|').strip()
     project_dir = target_dir / f'课程设计-{safe_name}'
@@ -194,7 +223,7 @@ def build_course_workspace(llm_output: dict, target_dir: Path, skill_dir: Path) 
         'deadline_note': deadline_note,
         'days_left': days_left,
         'tasks': tasks,
-        'refs': refs,
+        'refs': merged_links,
         'grading': grading,
         'submission': llm_output.get('submission'),
         'raw_assets_meta': raw_assets_meta,
@@ -311,6 +340,7 @@ def main():
     ap.add_argument('--target-dir', default='.', help='产物落地目录（默认当前目录）')
     ap.add_argument('--mode', choices=['course', 'distill'], help='覆盖 JSON 里的 mode')
     ap.add_argument('--skill-dir', help='chat2work skill 根目录（找 templates/）')
+    ap.add_argument('--extracted-file', help='extractor 输出的 extracted.json 路径')
     args = ap.parse_args()
 
     path = Path(args.llm_output)
@@ -319,6 +349,8 @@ def main():
         sys.exit(1)
 
     llm_output = json.loads(path.read_text(encoding='utf-8'))
+    if args.extracted_file:
+        llm_output['extracted_file'] = args.extracted_file
     mode = args.mode or ('distill' if llm_output.get('mode') == 'person-distiller' else 'course')
     target_dir = Path(args.target_dir).resolve()
     target_dir.mkdir(parents=True, exist_ok=True)
