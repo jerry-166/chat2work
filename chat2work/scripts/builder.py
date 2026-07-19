@@ -21,7 +21,7 @@ llm_output.json 结构（course-maker）：
   "messages_file": "messages.json"  # 用于 provenance
 }
 
-llm_output.json 结构（person-distiller，路径 1 起改为结构化 JSON）：
+llm_output.json 结构（person-distiller，v2.0 6 层结构）：
 {
   "mode": "person-distiller",
   "target_name": "张老师",
@@ -58,6 +58,12 @@ try:
     HAS_JINJA = True
 except ImportError:
     HAS_JINJA = False
+
+try:
+    from validator import triple_validate
+    HAS_VALIDATOR = True
+except ImportError:
+    HAS_VALIDATOR = False
 
 
 # ---------- 模板渲染 ----------
@@ -344,39 +350,119 @@ def build_course_workspace(llm_output: dict, target_dir: Path, skill_dir: Path) 
 
 # ---------- person-distiller 实体化 ----------
 
-def build_persona(llm_output: dict, target_dir: Path, skill_dir: Path = None) -> Path:
-    """用 jinja2 渲染 SOUL.md.tmpl，写成 so-{name}.md。
+def _merge_historical_corrections(new_corrections: list, archive_dir: Path) -> list:
+    """从归档目录的历史 SOUL.md 中提取 corrections 并合并到新列表。"""
+    if not archive_dir.exists():
+        return new_corrections
+    historical = []
+    for archived_md in sorted(archive_dir.glob('*.md'), reverse=True):
+        try:
+            text = archived_md.read_text(encoding='utf-8')
+            in_section = False
+            for line in text.split('\n'):
+                if '### Correction 修正记录' in line:
+                    in_section = True
+                    continue
+                if in_section:
+                    if line.strip().startswith('---'):
+                        break
+                    if line.startswith('- **用户反馈**'):
+                        user_said = line.split('"')[1] if '"' in line else line
+                        historical.append({
+                            'user_said': user_said,
+                            'prev_belief': '',
+                            'corrected_to': '',
+                            'source': '历史归档',
+                            'corrected_at': '',
+                        })
+        except Exception:
+            continue
+    return historical + new_corrections
 
-    路径 1 阶段：LLM 输出结构化 JSON（而非 markdown 全文），builder 用 jinja2 渲染模板。
-    后续路径 2 会扩展为 6 层结构 + Correction + 归档。
+
+def build_persona(llm_output: dict, target_dir: Path, skill_dir: Path = None,
+                  scenario: str = 'A', archive_previous: bool = True) -> Path:
+    """用 jinja2 渲染 6 层 SOUL.md.tmpl（v2.0），写成 so-{name}.md。
+
+    Args:
+        llm_output: LLM 蒸馏输出的结构化 JSON（6 层字段）。
+        target_dir: 产物落地目录。
+        skill_dir: chat2work skill 根目录（找 templates/）。
+        scenario: 'A'=蒸馏活人, 'D'=蒸馏自己（影响某些字段的默认填充）。
+        archive_previous: 旧版本是否归档到 so-{name}.archive/。
     """
     target_name = llm_output.get('target_name', 'unknown')
 
-    # 推断 skill_dir（向后兼容：未传时用 __file__ 推断）
     if skill_dir is None:
         skill_dir = Path(__file__).parent.parent
 
-    # 准备模板上下文（字段对齐 SOUL.md.tmpl 的变量名）
+    safe_name = ''.join(c for c in target_name if c not in '/\\:*?"<>|').strip()
+    out_path = target_dir / f'so-{safe_name}.md'
+
+    # 旧版本归档（colleague-skill 的版本回滚特性）
+    if archive_previous and out_path.exists():
+        archive_dir = target_dir / f'so-{safe_name}.archive'
+        archive_dir.mkdir(exist_ok=True)
+        timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
+        archive_path = archive_dir / f'so-{safe_name}.{timestamp}.md'
+        shutil.move(str(out_path), str(archive_path))
+        print(f"[*] 旧版本已归档: {archive_path}", file=sys.stderr)
+
+    # 合并 historical corrections
+    corrections = llm_output.get('corrections', [])
+    if archive_previous:
+        corrections = _merge_historical_corrections(
+            corrections, target_dir / f'so-{safe_name}.archive'
+        )
+
+    # 准备 6 层模板上下文
     context = {
+        # Layer 0 — 价值观底色
+        'core_values': llm_output.get('core_values', []),
+        'hard_rules': llm_output.get('hard_rules', []),
+        'red_lines': llm_output.get('red_lines', []),
+        # Layer 1 — 基础身份
         'target_name': target_name,
         'target_actual_name': llm_output.get('target_actual_name', target_name),
+        'role': llm_output.get('role', ''),
+        'mbti': llm_output.get('mbti', ''),
+        'tech_stack': llm_output.get('tech_stack', []),
+        'background_summary': llm_output.get('background_summary', ''),
+        'known_resources': llm_output.get('known_resources', []),
+        # Layer 2 — 表达风格
+        'speech_style': llm_output.get('speech_style', ''),
+        'catchphrases': llm_output.get('catchphrases', []),
+        'tone_switches': llm_output.get('tone_switches', {}),
+        'emoji_habits': llm_output.get('emoji_habits', ''),
+        'length_tendency': llm_output.get('length_tendency', ''),
+        # Layer 3 — 决策逻辑
+        'tech_preference': llm_output.get('tech_preference', ''),
+        'problem_solving_path': llm_output.get('problem_solving_path', ''),
+        'evaluation_focus': llm_output.get('evaluation_focus', []),
+        'push_or_pause': llm_output.get('push_or_pause', {}),
+        # Layer 4 — 人际网络
+        'audience_specific': llm_output.get('audience_specific', []),
+        # Layer 5 — 红线与避坑 + Correction
+        'avoid_topics': llm_output.get('avoid_topics', []),
+        'corrections': corrections,
+        # 辅助信息
+        'knowledge_domains': llm_output.get('knowledge_domains', []),
+        'recommended_resources': llm_output.get('recommended_resources', []),
+        'review_focus': llm_output.get('review_focus', []),
+        'qa_pattern': llm_output.get('qa_pattern', ''),
+        'evaluation_focus_text': llm_output.get('evaluation_focus', []),
+        'suitable_questions': llm_output.get('suitable_questions', []),
+        'unsuitable_questions': llm_output.get('unsuitable_questions', []),
+        'expression_habits': llm_output.get('expression_habits', ''),
+        # 溯源
         'source_file': llm_output.get('source_file', ''),
         'message_count': llm_output.get('message_count', 0),
         'time_range_start': llm_output.get('time_range_start', ''),
         'time_range_end': llm_output.get('time_range_end', ''),
         'generated_at': datetime.now().strftime('%Y-%m-%d'),
-        'speech_style': llm_output.get('speech_style', ''),
-        'catchphrases': llm_output.get('catchphrases', []),
-        'expression_habits': llm_output.get('expression_habits', ''),
-        'qa_pattern': llm_output.get('qa_pattern', ''),
-        'evaluation_focus': llm_output.get('evaluation_focus', ''),
-        'knowledge_domains': llm_output.get('knowledge_domains', []),
-        'recommended_resources': llm_output.get('recommended_resources', []),
-        'tech_preference': llm_output.get('tech_preference', ''),
-        'problem_solving_path': llm_output.get('problem_solving_path', ''),
-        'review_focus': llm_output.get('review_focus', []),
-        'suitable_questions': llm_output.get('suitable_questions', []),
-        'unsuitable_questions': llm_output.get('unsuitable_questions', []),
+        'scenario': scenario,
+        # 蒸馏版本
+        'distill_version': '2.0',
     }
 
     templates_dir = skill_dir / 'templates' / 'persona'
@@ -385,10 +471,8 @@ def build_persona(llm_output: dict, target_dir: Path, skill_dir: Path = None) ->
 
     soul_content = render_template('SOUL.md.tmpl', context, templates_dir)
 
-    safe_name = ''.join(c for c in target_name if c not in '/\\:*?"<>|').strip()
-    out_path = target_dir / f'so-{safe_name}.md'
     out_path.write_text(soul_content, encoding='utf-8')
-    print(f"[*] 人物画像已生成: {out_path}", file=sys.stderr)
+    print(f"[*] 人物画像已生成 (v2.0 6层): {out_path}", file=sys.stderr)
     print(f"[*] 安装方式: 把此文件放到 ~/.workbuddy/experts/ 或 Claude Code 的 skills 目录", file=sys.stderr)
     return out_path
 
@@ -402,6 +486,13 @@ def main():
     ap.add_argument('--mode', choices=['course', 'distill'], help='覆盖 JSON 里的 mode')
     ap.add_argument('--skill-dir', help='chat2work skill 根目录（找 templates/）')
     ap.add_argument('--extracted-file', help='extractor 输出的 extracted.json 路径')
+    ap.add_argument('--scenario', choices=['A', 'D'], default='A',
+                    help='蒸馏场景：A=蒸馏活人（默认），D=蒸馏自己（支持 --self-mode 补充本人字段）')
+    ap.add_argument('--archive-previous', action='store_true', default=True,
+                    help='旧版本归档到 so-{name}.archive/')
+    ap.add_argument('--no-archive', action='store_false', dest='archive_previous',
+                    help='不归档旧版本')
+    ap.add_argument('--messages-file', help='messages.json 路径（用于 validator 三重验证）')
     args = ap.parse_args()
 
     path = Path(args.llm_output)
@@ -426,7 +517,31 @@ def main():
         print(f"\n搞定啦~ 工作目录已生成: {project_dir}", file=sys.stderr)
         print(f"原聊天记录文件你自己看着删哦，我怕删错~", file=sys.stderr)
     elif mode == 'distill':
-        persona_path = build_persona(llm_output, target_dir, skill_dir)
+        # 三重验证（如果 messages_file 和 observations 可用）
+        verification = None
+        if args.messages_file and HAS_VALIDATOR:
+            messages_path = Path(args.messages_file)
+            if messages_path.exists():
+                try:
+                    msgs_data = json.loads(messages_path.read_text(encoding='utf-8'))
+                    messages = msgs_data if isinstance(msgs_data, list) else msgs_data.get('messages', [])
+                    observations = llm_output.get('observations', [])
+                    predictions = llm_output.get('predictions', [])
+                    if observations and messages:
+                        verified = triple_validate(observations, predictions, messages,
+                                                   llm_output.get('target_actual_name', llm_output.get('target_name', '')))
+                        verification = {
+                            'total': len(verified),
+                            'verified_count': sum(1 for o in verified if o.get('verification_status') == 'verified'),
+                            'partial_count': sum(1 for o in verified if o.get('verification_status') == 'partial'),
+                            'unverified_count': sum(1 for o in verified if o.get('verification_status') == 'unverified'),
+                        }
+                        print(f"[*] 三重验证完成: {verification}", file=sys.stderr)
+                except Exception as e:
+                    print(f"[!] 三重验证跳过: {e}", file=sys.stderr)
+        persona_path = build_persona(llm_output, target_dir, skill_dir,
+                                     scenario=args.scenario,
+                                     archive_previous=args.archive_previous)
         print(f"\n搞定啦~ 人物画像已生成: {persona_path}", file=sys.stderr)
         print(f"原聊天记录文件你自己看着删哦，我怕删错~", file=sys.stderr)
     else:

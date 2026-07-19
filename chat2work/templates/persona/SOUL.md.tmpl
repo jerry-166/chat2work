@@ -1,21 +1,65 @@
 ---
-name: so-{{ target_name | default('unknown') | lower | replace(' ', '-') }}
+name: so-{{ target_name | lower | replace(' ', '-') }}
 summary: 从群聊记录蒸馏的人物画像，可作为 Claude Code expert / WorkBuddy skill 安装
-distilled_from: {{ source_file | default('chat record') }}
+distilled_from: {{ source_file }}
 distilled_at: {{ generated_at }}
-target_actual_name: {{ target_name | default('unknown') }}
-message_count: {{ message_count | default(0) }}
+target_actual_name: {{ target_actual_name }}
+message_count: {{ message_count }}
+distill_version: 2.0
+scenario: {{ scenario | default('A') }}
 ---
 
-# {{ target_name | default('Unknown') }} — 数字分身
+# {{ target_name }} — 数字分身
 
-> 本画像由 Chat2Work 从 {{ message_count | default(0) }} 条群聊发言中蒸馏生成
-> 时间跨度：{{ time_range_start | default('?') }} ~ {{ time_range_end | default('?') }}
-> 安装方式：把此文件放到 `~/.workbuddy/experts/` 或 Claude Code skills 目录
+> 本画像由 Chat2Work 从 {{ message_count }} 条群聊发言中蒸馏生成
+> 时间跨度：{{ time_range_start }} ~ {{ time_range_end }}
+> 蒸馏版本：v2.0（6 层递进人格结构，对齐 colleague-skill）
+> 安装方式：把此文件放到 `~/.workbuddy/experts/agents/` 或 Claude Code skills 目录
 
 ---
 
-## Persona（人物性格）
+## Layer 0 — 价值观底色（最高优先级）
+
+{% if core_values %}
+### 核心价值观
+{% for v in core_values %}
+- {{ v }}
+{% endfor %}
+{% endif %}
+
+{% if hard_rules %}
+### 硬规则（绝不让步）
+{% for r in hard_rules %}
+- {{ r }}
+{% endfor %}
+{% endif %}
+
+{% if red_lines %}
+### 红线（明确拒绝）
+{% for r in red_lines %}
+- {{ r }}
+{% endfor %}
+{% endif %}
+
+---
+
+## Layer 1 — 基础身份
+
+- **姓名/角色**：{{ target_actual_name }} / {{ role | default('-') }}
+- **MBTI**：{{ mbti | default('未推断') }}
+- **技术栈**：{{ tech_stack | join('、') if tech_stack else '-' }}
+- **背景**：{{ background_summary | default('-') }}
+
+{% if known_resources %}
+### 已知资源
+{% for res in known_resources %}
+- **{{ res.name }}**{% if res.url %}（{{ res.url }}）{% endif %} — {{ res.reason | default('-') }}
+{% endfor %}
+{% endif %}
+
+---
+
+## Layer 2 — 表达风格
 
 ### 说话风格
 
@@ -24,34 +68,104 @@ message_count: {{ message_count | default(0) }}
 {% if catchphrases %}
 ### 口头禅 / 常用句式
 
-{% for phrase in catchphrases %}
-- "{{ phrase }}"
+{% for p in catchphrases %}
+- "{{ p }}"
 {% endfor %}
 {% endif %}
 
-### 表达习惯
+{% if tone_switches and tone_switches is mapping %}
+### 语境切换
 
-{{ expression_habits | default('数据不足。') }}
+| 对象 | 语气 |
+|------|------|
+{% for ctx, tone in tone_switches.items() %}
+| {{ ctx }} | {{ tone }} |
+{% endfor %}
+{% endif %}
 
-### 沟通偏好
-
-- **回答提问时**：{{ qa_pattern | default('-') }}
-- **评估方案时**：{{ evaluation_focus | default('-') }}
+- **emoji/标点习惯**：{{ emoji_habits | default('-') }}
+- **长度倾向**：{{ length_tendency | default('-') }}
 
 ---
 
-## Work Skill（工作能力）
+## Layer 3 — 决策逻辑
+
+### 技术选型倾向
+
+{{ tech_preference | default('数据不足，无法判断技术选型倾向。') }}
+
+### 问题处理路径
+
+{{ problem_solving_path | default('数据不足。') }}
+
+{% if evaluation_focus %}
+### 评估关注点
+{% for f in evaluation_focus %}
+- {{ f }}
+{% endfor %}
+{% endif %}
+
+{% if push_or_pause and push_or_pause is mapping %}
+### 推动 vs 搁置
+
+- **推动因素**：{{ push_or_pause.push | join('、') if push_or_pause.push else '-' }}
+- **搁置因素**：{{ push_or_pause.pause | join('、') if push_or_pause.pause else '-' }}
+{% endif %}
+
+---
+
+## Layer 4 — 人际网络差异化
+
+{% if audience_specific %}
+{% for a in audience_specific %}
+### 对 {{ a.audience }}
+- **语气**：{{ a.tone | default('-') }}
+- **话题**：{{ a.topics | join('、') if a.topics else '-' }}
+- **示例**：{{ a.examples | join(' / ') if a.examples else '-' }}
+{% endfor %}
+{% else %}
+发言样本中未观察到对不同对象的差异化沟通模式。
+{% endif %}
+
+---
+
+## Layer 5 — 红线与避坑 + Correction 修正层
+
+{% if avoid_topics %}
+### 避免话题
+{% for t in avoid_topics %}
+- {{ t }}
+{% endfor %}
+{% endif %}
+
+{% if corrections %}
+### Correction 修正记录
+
+以下记录为用户反馈修正，下次蒸馏时自动合并，确保画像持续精进：
+
+{% for c in corrections %}
+- **用户反馈**："{{ c.user_said }}"
+  - 原画像：{{ c.prev_belief }}
+  - 修正为：{{ c.corrected_to }}
+  - 来源：{{ c.source | default('用户反馈') }}
+  - 时间：{{ c.corrected_at | default('-') }}
+{% endfor %}
+{% else %}
+> 💡 若画像与实际不符，请直接编辑此节添加 correction 记录（格式参考上方注释）。下次蒸馏时历史 corrections 会自动合并。
+{% endif %}
+
+---
+
+## 辅助信息
 
 ### 核心知识领域
 
 {% if knowledge_domains %}
 {% for domain in knowledge_domains %}
 #### {{ loop.index }}. {{ domain.name }}
-
 - **常讨论**：{{ domain.topics | join('、') if domain.topics else '-' }}
 - **引用资源**：{{ domain.references | join('、') if domain.references else '-' }}
 - **典型发言**：{{ domain.example | default('-') }}
-
 {% endfor %}
 {% else %}
 知识领域信息不足。
@@ -66,28 +180,6 @@ message_count: {{ message_count | default(0) }}
 {% endfor %}
 {% else %}
 暂无明确推荐资源。
-{% endif %}
-
----
-
-## 决策模式
-
-### 技术选型倾向
-
-{{ tech_preference | default('数据不足，无法判断技术选型倾向。') }}
-
-### 问题处理路径
-
-{{ problem_solving_path | default('数据不足。') }}
-
-### 评分/审查关注点
-
-{% if review_focus %}
-{% for focus in review_focus %}
-- {{ focus }}
-{% endfor %}
-{% else %}
-未观察到明确的审查关注点。
 {% endif %}
 
 ---
@@ -118,19 +210,23 @@ message_count: {{ message_count | default(0) }}
 
 ---
 
-## 溯源
+## 诚实边界声明
 
-- **源文件**：{{ source_file | default('-') }}
-- **消息条数**：{{ message_count | default(0) }}
-- **时间范围**：{{ time_range_start | default('?') }} ~ {{ time_range_end | default('?') }}
-- **蒸馏时间**：{{ generated_at }}
-
-本画像中的每条观察都尽量附了原文示例，可在 `_provenance/` 中反查原始消息。
-若发现画像与实际不符，建议：
-1. 检查目标人物的消息是否被正确识别
-2. 增加更多聊天记录作为输入
-3. 手动修正此 SOUL.md 文件
+> 本画像存在以下局限，使用时请知悉：
+> 1. **蒸馏不了直觉**：仅能从公开文字推断，无法捕捉隐性经验
+> 2. **捕捉不了突变**：数据有时效性，人物想法会变化
+> 3. **公开表达 ≠ 真实想法**：聊天 ≠ 内心，群聊发言带社交滤镜
+> 4. **样本偏差**：群聊场景下发言未必代表该人物全貌
 
 ---
 
-*此人物画像由 Chat2Work 自动生成，仅供学习研究使用。请勿用于冒充本人或商业用途。*
+## 溯源
+
+- **源文件**：{{ source_file }}
+- **消息条数**：{{ message_count }}
+- **时间范围**：{{ time_range_start }} ~ {{ time_range_end }}
+- **蒸馏时间**：{{ generated_at }}
+- **蒸馏版本**：v2.0（6 层递进人格结构）
+- **场景**：{{ scenario }}
+
+*此人物画像由 Chat2Work 自动生成，仅供私人学习研究使用。请勿用于冒充本人或商业用途。*

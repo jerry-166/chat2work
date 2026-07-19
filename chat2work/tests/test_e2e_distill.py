@@ -94,15 +94,14 @@ def test_e2e_real_yang_distillation(tmp_path):
     assert content.startswith('---\n')
     end = content.index('\n---\n', 4)
     frontmatter = content[4:end]
-    for field in ['name:', 'summary:', 'distilled_from:', 'distilled_at:', 'target_actual_name:', 'message_count:']:
+    for field in ['name:', 'summary:', 'distilled_from:', 'distilled_at:', 'target_actual_name:', 'message_count:', 'distill_version:']:
         assert field in frontmatter, f"frontmatter 缺字段: {field}"
 
-    # 含 5 大块标题
-    assert 'Persona' in content or '数字分身' in content
-    assert 'Work Skill' in content or '工作能力' in content
-    assert '决策模式' in content or '技术选型' in content
-    assert '使用建议' in content or '适合问' in content
-    assert '溯源' in content
+    # 含 6 层标题 + 辅助信息 + 使用建议 + 溯源（v2.0 结构）
+    v2_blocks = ['Layer 0', 'Layer 1', 'Layer 2', 'Layer 3', 'Layer 4', 'Layer 5',
+                 '辅助信息', '使用建议', '诚实边界声明', '溯源']
+    for block in v2_blocks:
+        assert block in content, f"SOUL.md 缺关键区块: {block}"
 
     # 至少 3 处附原文示例（含 Yang 的特征内容）
     yang_signatures = ['DTS_Library', '辣椒油', '腾讯会议', 'MCP Server', '网盘分享']

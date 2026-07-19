@@ -35,10 +35,10 @@ def test_build_persona_uses_jinja2_template(tmp_path):
     llm_output = load_golden_llm_output()
     out_path = build_persona(llm_output, tmp_path, SKILL_DIR)
     content = out_path.read_text(encoding='utf-8')
-    # 模板渲染的特征字符串
+    # 模板渲染的特征字符串（v2.0 6 层结构）
     assert '数字分身' in content
-    assert 'Persona（人物性格）' in content
-    assert 'Work Skill（工作能力）' in content
+    assert 'Layer 0' in content
+    assert 'Layer 1' in content
     # 不应含未渲染的 jinja2 标签
     assert '{{' not in content
     assert '{%' not in content
@@ -77,12 +77,8 @@ def test_build_persona_frontmatter_valid(tmp_path):
     assert content.startswith('---\n')
     end = content.index('\n---\n', 4)
     frontmatter = content[4:end]
-    assert 'name:' in frontmatter
-    assert 'summary:' in frontmatter
-    assert 'distilled_from:' in frontmatter
-    assert 'distilled_at:' in frontmatter
-    assert 'target_actual_name:' in frontmatter
-    assert 'message_count:' in frontmatter
+    for field in ['name:', 'summary:', 'distilled_from:', 'distilled_at:', 'target_actual_name:', 'message_count:', 'distill_version:', 'scenario:']:
+        assert field in frontmatter, f"frontmatter 缺字段: {field}"
 
 
 def test_build_persona_includes_golden_fields(tmp_path):
