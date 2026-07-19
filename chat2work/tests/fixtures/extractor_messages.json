@@ -1,0 +1,11 @@
+{
+  "messages": [
+    {"sender": "Yang", "sender_id": "wxid_a", "time": "2026-07-14T09:03:00", "content": "分享个网盘 链接: https://pan.baidu.com/s/1IWgZBqY8nigCCkL8D_fK2Q?pwd=vp2i 提取码: vp2i", "msg_type": "text"},
+    {"sender": "Yang", "sender_id": "wxid_a", "time": "2026-07-14T09:10:00", "content": "腾讯会议 邀请链接：https://meeting.tencent.com/dm/gDzNYijsmS5L #腾讯会议号：460-149-615", "msg_type": "text"},
+    {"sender": "张老师", "sender_id": "wxid_b", "time": "2026-07-10T11:13:00", "content": "产品页 https://www.waveshare.net/wiki/WAVEGO 先看介绍", "msg_type": "text"},
+    {"sender": "张老师", "sender_id": "wxid_b", "time": "2026-07-10T14:32:00", "content": "提交方式：上传学习通 截止时间：2026-07-25 23:59", "msg_type": "text"},
+    {"sender": "张老师", "sender_id": "wxid_b", "time": "2026-07-12T14:01:00", "content": "报告模板发群文件了，叫 实验报告模板.docx；补丁代码 wavego_twin_patch.zip", "msg_type": "text"},
+    {"sender": "李同学", "sender_id": "wxid_c", "time": "2026-07-15T10:00:00", "content": "收到，谢谢老师！", "msg_type": "text"},
+    {"sender": "张老师", "sender_id": "wxid_b", "time": "2026-07-15T11:00:00", "content": "纸质报告下周交", "msg_type": "text"}
+  ]
+}
