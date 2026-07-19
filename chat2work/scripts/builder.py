@@ -150,11 +150,15 @@ def build_provenance(llm_output: dict, messages: list[dict]) -> dict:
 def build_course_workspace(llm_output: dict, target_dir: Path, skill_dir: Path) -> Path:
     """根据 LLM 输出构建课程设计工作目录。"""
     project_name = llm_output.get('project_name', '未命名课程设计')
-    deadline_str = llm_output.get('deadline', '')
+    deadline_str = llm_output.get('deadline', '') or ''
+    deadline_uncertain = bool(llm_output.get('deadline_uncertain'))
+    deadline_note = llm_output.get('deadline_note', '')
     tasks = llm_output.get('tasks', [])
     refs = llm_output.get('refs', [])
     grading = llm_output.get('grading', [])
     messages_file = llm_output.get('messages_file')
+    raw_assets = llm_output.get('raw_assets', []) or []
+    raw_assets_meta = llm_output.get('raw_assets_meta', []) or []
 
     # 安全清理项目名（去掉路径分隔符等）
     safe_name = ''.join(c for c in project_name if c not in '/\\:*?"<>|').strip()
@@ -186,11 +190,14 @@ def build_course_workspace(llm_output: dict, target_dir: Path, skill_dir: Path) 
     context = {
         'project_name': project_name,
         'deadline': deadline_str,
+        'deadline_uncertain': deadline_uncertain,
+        'deadline_note': deadline_note,
         'days_left': days_left,
         'tasks': tasks,
         'refs': refs,
         'grading': grading,
         'submission': llm_output.get('submission'),
+        'raw_assets_meta': raw_assets_meta,
         'generated_at': datetime.now().strftime('%Y-%m-%d %H:%M'),
         'total_messages': llm_output.get('total_messages', 0),
     }
@@ -253,14 +260,27 @@ def build_course_workspace(llm_output: dict, target_dir: Path, skill_dir: Path) 
         print(f"  [!] 未提供 messages_file，provenance 溯源不可用", file=sys.stderr)
 
     # 如果有原始资料包路径，复制过来
-    raw_assets = llm_output.get('raw_assets', [])
+    # raw_assets 兼容两种形式：
+    #   - 字符串路径: ["path/to/网络实习.pdf", ...]
+    #   - 对象:       [{"path": "...", "filename": "网络实习.pdf", "src_msg": "msg#5"}, ...]
     if raw_assets:
         assets_dir = project_dir / '02_参考资料' / '原始资料包'
         for asset in raw_assets:
-            src = Path(asset)
+            if isinstance(asset, dict):
+                path_str = asset.get('path') or asset.get('src') or asset.get('filename', '')
+                rename_to = asset.get('rename') or asset.get('save_as')
+            else:
+                path_str = str(asset)
+                rename_to = None
+            if not path_str:
+                continue
+            src = Path(path_str)
             if src.exists() and src.is_file():
-                shutil.copy2(src, assets_dir / src.name)
-                print(f"  [+] 复制资料: {src.name}", file=sys.stderr)
+                dst_name = rename_to or src.name
+                shutil.copy2(src, assets_dir / dst_name)
+                print(f"  [+] 复制资料: {dst_name}", file=sys.stderr)
+            else:
+                print(f"  [!] 资料不存在，跳过: {src}", file=sys.stderr)
 
     return project_dir
 

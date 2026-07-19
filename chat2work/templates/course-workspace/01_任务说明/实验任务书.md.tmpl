@@ -27,7 +27,10 @@
 
 {% if deadline %}
 - **最终提交时间**：{{ deadline }}
-{% if days_left is not none and days_left >= 0 %}- **剩余时间**：{{ days_left }} 天{% elif days_left is not none %}- ⚠️ 已过期 {{ -days_left }} 天{% endif %}
+{% if deadline_uncertain %}- ⚠️ 此时间为推测，未在聊天记录中明确，请向老师核实
+{% if deadline_note %}- {{ deadline_note }}{% endif %}
+{% elif days_left is not none and days_left >= 0 %}- **剩余时间**：{{ days_left }} 天
+{% elif days_left is not none %}- ⚠️ 已过期 {{ -days_left }} 天{% endif %}
 {% else %}
 - ⚠️ 未从聊天记录中识别到明确 deadline，请向老师确认
 {% endif %}

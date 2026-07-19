@@ -8,6 +8,10 @@ weChatDataAnalysis/
 # Test outputs
 **/tests/output*/
 **/tests/output_real*/
+/tests/
+
+# Chat2Work scratch
+.chat2work_tmp/
 
 # Python
 __pycache__/

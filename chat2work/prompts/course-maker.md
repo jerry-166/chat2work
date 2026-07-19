@@ -51,6 +51,8 @@ output_schema: workspace_json
   "mode": "course-maker",
   "project_name": "数字孪生WAVEGO实验",
   "deadline": "2026-07-25",
+  "deadline_uncertain": false,
+  "deadline_note": "",
   "total_messages": 156,
   "tasks": [
     {
@@ -76,12 +78,17 @@ output_schema: workspace_json
     "src_msgs": ["msg#130"]
   },
   "grading": [
-    {"item": "架构与原理理解", "score": 15, "criteria": "能清晰阐述三层架构"},
-    {"item": "Unity 虚拟模型", "score": 20, "criteria": "12 关节驱动正确"}
+    {"item": "架构与原理理解", "score": 15, "criteria": "能清晰阐述三层架构"}
   ],
-  "raw_assets": []
+  "messages_file": "/abs/path/to/messages.json",
+  "raw_assets": ["/abs/path/to/网络实习.pdf", "/abs/path/to/顺序.xlsx"],
+  "raw_assets_meta": [
+    {"filename": "网络实习.pdf", "sender": "爪洼小薰", "time": "2026-06-01T11:28:04", "src_msg": "msg#5", "note": "实习总体说明"}
+  ]
 }
 ```
+
+> 注：`messages_file` / `raw_assets` / `raw_assets_meta` 的路径必须是**绝对路径**，指向 parser 输出的 messages.json 和解压后的真实资料文件。builder 会据此复制文件并生成溯源映射，缺 messages_file 会让 provenance 溯源失效。
 
 # Edge Cases
 
@@ -101,3 +108,5 @@ output_schema: workspace_json
 - **src_msgs / src_msg 字段格式**：用 `msg#N`，其中 N 是该消息在 messages 数组里的**下标**（从 0 开始）。例如数组的第 5 条消息写 `msg#4`。builder 会据此反查真实消息。N 必须是真实存在的下标，不要编造。
 - project_name 用中文，简洁（不超过 20 字）
 - 若消息量 > 500 条，可以采样阅读（每 5 条取 1 条 + 全量扫描关键词）
+- **deadline 是推测出来的（如「下周」按消息时间推算）时，必须设 `deadline_uncertain: true` 并在 `deadline_note` 写明推算依据**，否则 builder 会按过期天数误报
+- `messages_file` 必须填 parser 输出 messages.json 的**绝对路径**；`raw_assets` 填解压后真实文件的绝对路径数组；`raw_assets_meta` 记录每个资料的 filename/sender/time/src_msg/note（含未实际下载的网盘资源）

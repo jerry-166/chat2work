@@ -34,6 +34,14 @@
 
 `02_参考资料/原始资料包/` 目录下保存老师发送的原始压缩包和附件，解压后原样保留，方便对照官方目录结构。
 
+{% if raw_assets_meta %}
+| 文件 | 发送者 | 时间 | 说明 |
+|------|--------|------|------|
+{% for a in raw_assets_meta %}| {{ a.filename }} | {{ a.sender | default('-') }} | {{ a.time | default('-') }} | {{ a.note | default('') }} |
+{% endfor %}{% else %}
+（资料清单待补充）
+{% endif %}
+
 ## 溯源说明
 
 - 表格中"来源消息"列的 `msg#xxx` 是聊天记录中的消息 ID
