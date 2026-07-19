@@ -38,9 +38,21 @@ def _extract_links(content: str) -> list[dict]:
     return links
 
 
+# 文件名:中文/字母数字 + 常见后缀。后缀后面不能紧跟字母/数字/中文(防止 .c 匹配 .com)
+FILE_PATTERN = re.compile(
+    r'([一-龥\w]+\.(?:zip|rar|7z|pdf|docx?|xlsx?|pptx?|py|cpp|c|java|js|ts|fbx|obj|stl|step|urdf|gha|mp4))(?![a-zA-Z0-9_一-龥])',
+    re.IGNORECASE,
+)
+
+
+def _extract_files(content: str) -> list[str]:
+    return FILE_PATTERN.findall(content)
+
+
 def extract_all(messages: list[dict]) -> dict:
     """从 messages 数组抽取所有客观字段。返回 extracted 结构。"""
     links = []
+    files = []
     for idx, msg in enumerate(messages):
         content = msg.get('content', '') or ''
         for link in _extract_links(content):
@@ -48,4 +60,11 @@ def extract_all(messages: list[dict]) -> dict:
             link['sender'] = msg.get('sender')
             link['time'] = msg.get('time')
             links.append(link)
-    return {'links': links, 'files': [], 'dates': [], 'meeting_codes': []}
+        for filename in _extract_files(content):
+            files.append({
+                'filename': filename,
+                'msg_index': idx,
+                'sender': msg.get('sender'),
+                'time': msg.get('time'),
+            })
+    return {'links': links, 'files': files, 'dates': [], 'meeting_codes': []}

@@ -44,3 +44,22 @@ def test_extract_links_tencent_meeting_kept():
     result = extract_all(load_messages())
     urls = [l['url'] for l in result['links']]
     assert 'https://meeting.tencent.com/dm/gDzNYijsmS5L' in urls
+
+
+def test_extract_files_multiple_extensions():
+    """一条消息里多个不同后缀的文件都要抽出。"""
+    result = extract_all(load_messages())
+    names = [f['filename'] for f in result['files']]
+    assert '实验报告模板.docx' in names
+    assert 'wavego_twin_patch.zip' in names
+    # 抽到的那条 msg_index 是 msg#4
+    for f in result['files']:
+        assert f['msg_index'] == 4
+        assert f['sender'] == '张老师'
+
+
+def test_extract_files_no_false_positive_on_plain_text():
+    """纯闲聊消息(msg#5 "收到谢谢")不应抽到任何文件。"""
+    result = extract_all(load_messages())
+    for f in result['files']:
+        assert f['msg_index'] != 5
