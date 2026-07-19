@@ -20,3 +20,27 @@ def test_extract_links_keeps_pwd_query_string():
     result = extract_all(load_messages())
     urls = [l['url'] for l in result['links']]
     assert 'https://pan.baidu.com/s/1IWgZBqY8nigCCkL8D_fK2Q?pwd=vp2i' in urls
+
+
+def test_extract_links_pairs_extract_code():
+    """同消息里的提取码要与链接绑定到 extract_code 字段。"""
+    result = extract_all(load_messages())
+    baidu = next(l for l in result['links'] if 'pan.baidu.com' in l['url'])
+    assert baidu['extract_code'] == 'vp2i'
+    assert baidu['msg_index'] == 0
+    assert baidu['sender'] == 'Yang'
+
+
+def test_extract_links_without_code_has_none():
+    """无提取码的链接,extract_code 为 None。"""
+    result = extract_all(load_messages())
+    wiki = next(l for l in result['links'] if 'waveshare' in l['url'])
+    assert wiki['extract_code'] is None
+    assert wiki['msg_index'] == 2
+
+
+def test_extract_links_tencent_meeting_kept():
+    """腾讯会议邀请链接也要抽出。"""
+    result = extract_all(load_messages())
+    urls = [l['url'] for l in result['links']]
+    assert 'https://meeting.tencent.com/dm/gDzNYijsmS5L' in urls
