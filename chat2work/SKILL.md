@@ -62,16 +62,21 @@ license: MIT
 
 3. **加载 prompt 模板**：读取 `prompts/<scene>.md`，按模板四段式（Role/Extraction Rules/Output Format/Edge Cases）
 
-4. **LLM 处理**：把 messages.json + prompt 模板 一起作为输入，由宿主 AI（你）执行提取
-   - course-maker：输出目录树 JSON（含 tasks/refs/deadline/dir_tree）
+4. **规则提取客观字段**：调用 `python scripts/extractor.py messages.json -o extracted.json`
+   - 纯规则全量抽取链接/文件/提取码/日期/会议号，100% 不丢（LLM 自由扫描会漏抽，规则保证不丢）
+   - 产出的 extracted.json 喂给 LLM 作输入，LLM 不再自己扫链接，只做语义标注（why/title）
+
+5. **LLM 处理**：把 messages.json + extracted.json + prompt 模板 一起作为输入，由宿主 AI（你）执行提取
+   - course-maker：refs 字段的 url/extract_code/src_msg 直接从 extracted.links 取，LLM 只补 why/title；输出目录树 JSON（含 tasks/refs/deadline/dir_tree）
    - person-distiller：输出 SOUL.md 内容
 
-5. **实体化输出**：调用 `python scripts/builder.py <llm_output.json> [--target-dir .]`
+6. **实体化输出**：调用 `python scripts/builder.py <llm_output.json> --extracted-file extracted.json [--target-dir .]`
    - builder 用 jinja2 渲染 templates/ 下的模板
+   - 链接库以 extracted.links 为主表（规则保证不丢），llm_output.refs 只贡献语义字段
    - 创建目录、写文件、生成 _provenance/msg-to-file.json
    - 产物落到用户当前工作目录（不是 skill 目录）
 
-6. **收尾提示**：打印一句
+7. **收尾提示**：打印一句
    > 搞定啦~ 原聊天记录文件你自己看着删哦，我怕删错~
 
 ## 边界与错误处理

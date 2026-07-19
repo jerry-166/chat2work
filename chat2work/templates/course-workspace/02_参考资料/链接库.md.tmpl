@@ -9,10 +9,10 @@
 ## 链接清单（共 {{ refs | length }} 条）
 
 {% if refs %}
-| # | URL | 标题 | 发送者 | 时间 | 为什么发 |
-|---|-----|------|--------|------|----------|
+| # | URL | 标题 | 提取码 | 发送者 | 时间 | 为什么发 |
+|---|-----|------|--------|--------|------|----------|
 {% for ref in refs %}
-| {{ loop.index }} | {{ ref.url }} | {{ ref.title | default('-') }} | {{ ref.sender }} | {{ ref.time }} | {{ ref.why | default('-') }} |
+| {{ loop.index }} | {{ ref.url }} | {{ ref.title | default('-') }} | {{ ref.extract_code | default('-') }} | {{ ref.sender }} | {{ ref.time }} | {{ ref.why | default('-') }} |
 {% endfor %}
 {% else %}
 暂无链接。可能原因：聊天记录中无人发链接，或 parser 未能识别。
@@ -27,7 +27,7 @@
 {% for sender in senders %}
 ### {{ sender }}
 {% for ref in refs if ref.sender == sender %}
-- {{ ref.url }}{% if ref.title %} — {{ ref.title }}{% endif %}（{{ ref.time }}）{% if ref.why %}：{{ ref.why }}{% endif %}
+- {{ ref.url }}{% if ref.title %} — {{ ref.title }}{% endif %}{% if ref.extract_code %}（提取码:{{ ref.extract_code }}）{% endif %}（{{ ref.time }}）{% if ref.why %}：{{ ref.why }}{% endif %}
 {% endfor %}
 
 {% endfor %}

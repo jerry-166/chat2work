@@ -25,9 +25,14 @@ output_schema: workspace_json
 - 若有多个 deadline（如中期检查 + 最终提交），都列出
 
 ## 3. 参考资料（链接）
-- 提取所有 http(s) 链接
-- 每条链接记录：url、谁发的、什么时候发的、为什么发（看上下文）
-- 公众号文章、GitHub 仓库、Wiki、商品页等都要收录
+
+**重要:链接、文件、提取码、会议号已由 extractor 规则预抽好,在输入的 `extracted` 字段里给出。你不要自己重新扫描消息抽取链接,直接引用 `extracted.links` 即可。** 你只负责给每条链接标语义:
+
+- 读 `extracted.links` 里的每条 url,看它在原文里的上下文,标 `why`(这是干嘛的:产品页/网盘/会议/登记表/参考文章)
+- `extracted.links` 里没有的链接不得编造;若有遗漏也不要补(规则保证不丢)
+- 每条链接记录:url、sender、time、why,`src_msg` 用 `msg#N`(N 来自 extracted.links 的 msg_index)
+- 文件同理:用 `extracted.files`,标 note(这文件是干嘛的)
+- 日期用 `extracted.dates`(已含 uncertain 标记),归到对应 task
 
 ## 4. 代码包/资料包
 - 识别附件、压缩包、文件名提及（.zip/.rar/.pdf/.docx/.py/.fbx 等）
@@ -45,6 +50,8 @@ output_schema: workspace_json
 # Output Format
 
 输出严格 JSON，结构如下（不要输出任何其他内容，不要 markdown 代码块包裹）：
+
+> **输入预置**:pipeline 会把 `extracted.json`(extractor 规则预抽的 links/files/dates/meeting_codes)和 messages.json 一起给你。refs 字段的 url/extract_code/src_msg 直接从 extracted.links 取,你只补 why/title。
 
 ```json
 {
