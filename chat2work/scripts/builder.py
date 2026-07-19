@@ -172,10 +172,22 @@ def build_course_workspace(llm_output: dict, target_dir: Path, skill_dir: Path) 
 
     # 链接主表:以 extracted.links 为准(规则保证不丢),refs 只贡献语义字段
     merged_links = []
-    ref_by_url = {r.get('url'): r for r in refs if r.get('url')}
+    # 按(url,msg_index)匹配 LLM 标注,防止同一 URL 被多次发时覆盖错误
+    ref_by_index: dict[int, dict] = {}
+    for r in refs:
+        idx = parse_msg_ref(r.get('src_msg')) if r.get('url') else None
+        if idx is not None:
+            ref_by_index[idx] = r
     for link in extracted.get('links', []):
         url = link.get('url')
-        ref = ref_by_url.get(url, {})
+        idx = link.get('msg_index')
+        ref = ref_by_index.get(idx, {}) if idx is not None else {}
+        # 精确 msg 匹配失败时fallback到url匹配
+        if not ref and url:
+            for r in refs:
+                if r.get('url') == url:
+                    ref = r
+                    break
         merged_links.append({
             'url': url,
             'title': ref.get('title', ''),
@@ -183,7 +195,7 @@ def build_course_workspace(llm_output: dict, target_dir: Path, skill_dir: Path) 
             'time': link.get('time') or ref.get('time', ''),
             'why': ref.get('why', '[未标注]'),
             'extract_code': link.get('extract_code'),
-            'src_msg': f"msg#{link.get('msg_index')}" if link.get('msg_index') is not None else (ref.get('src_msg', '')),
+            'src_msg': f"msg#{idx}" if idx is not None else (ref.get('src_msg', '')),
         })
     # extracted 缺失时退回 refs(v1 行为,不破坏)
     if not merged_links:

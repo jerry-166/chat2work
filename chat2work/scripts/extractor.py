@@ -22,23 +22,30 @@ from pathlib import Path
 # 链接:保留完整 query string(?pwd=xxx 不截断)。停在空白/中文标点/引号/括号
 LINK_PATTERN = re.compile(r'https?://[^\s<>"\'，。、）)】\]]+')
 
-# 提取码:pwd=xxx 或 "提取码: xxx" / "提取码：xxx"
-PWD_QUERY_PATTERN = re.compile(r'[?&]pwd=([a-zA-Z0-9]{4})')
-PWD_TEXT_PATTERN = re.compile(r'提取码[:：]\s*([a-zA-Z0-9]{4})')
+# 提取码:pwd=xxx(不限长度) 或 "提取码: xxx" / "extraction code: xxx"
+PWD_QUERY_PATTERN = re.compile(r'[?&]pwd=([a-zA-Z0-9]{3,})')
+PWD_TEXT_CN = re.compile(r'提取码[:：]\s*([a-zA-Z0-9]{3,})')
+PWD_TEXT_EN = re.compile(r'(?:extraction\s+code|Extraction\s+Code|pass\s*code)[:：]\s*([a-zA-Z0-9]{3,})', re.IGNORECASE)
+
+PWD_TEXT_PATTERNS = [PWD_QUERY_PATTERN, PWD_TEXT_CN, PWD_TEXT_EN]
 
 
 def _extract_links(content: str) -> list[dict]:
     """从单条消息内容抽链接 + 配对本消息里的提取码。"""
     links = []
     for url in LINK_PATTERN.findall(content):
+        code = None
         # 先看 URL 自带的 ?pwd=
-        code_match = PWD_QUERY_PATTERN.search(url)
-        if code_match:
-            code = code_match.group(1)
+        m = PWD_QUERY_PATTERN.search(url)
+        if m:
+            code = m.group(1)
         else:
-            # 再看消息正文里独立的"提取码: xxx"
-            text_match = PWD_TEXT_PATTERN.search(content)
-            code = text_match.group(1) if text_match else None
+            # 再看消息正文里的"提取码: xxx" / "extraction code: xxx"
+            for pat in PWD_TEXT_PATTERNS[1:]:
+                m = pat.search(content)
+                if m:
+                    code = m.group(1)
+                    break
         links.append({'url': url, 'extract_code': code})
     return links
 
@@ -56,9 +63,15 @@ def _extract_files(content: str) -> list[str]:
 
 # 绝对日期
 ABS_DATE_PATTERN = re.compile(r'(\d{4}[/-]\d{1,2}[/-]\d{1,2})')
-# 相对:"下周X" / "本周X"
-WEEKDAY_MAP = {'一': 0, '二': 1, '三': 2, '四': 3, '五': 4, '六': 5, '日': 6, '天': 6}
-REL_WEEK_PATTERN = re.compile(r'(下周|本周)([一二三四五六日天])')
+# 相对:"下周X" / "本周X" / "next Monday" / "this Friday"
+WEEKDAY_MAP = {
+    '一': 0, '二': 1, '三': 2, '四': 3, '五': 4, '六': 5, '日': 6, '天': 6,
+    'monday': 0, 'tuesday': 1, 'wednesday': 2, 'thursday': 3,
+    'friday': 4, 'saturday': 5, 'sunday': 6,
+    'mon': 0, 'tue': 1, 'wed': 2, 'thu': 3, 'fri': 4, 'sat': 5, 'sun': 6,
+}
+REL_WEEK_CN = re.compile(r'(下周|本周)([一二三四五六日天])')
+REL_WEEK_EN = re.compile(r'(next|this)\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri|sat|sun)', re.IGNORECASE)
 
 
 def _to_weekday_date(base_iso: str, weekday_cn: str) -> str:
@@ -80,11 +93,30 @@ def _extract_dates(content: str, msg_time: str) -> list[dict]:
     for raw in ABS_DATE_PATTERN.findall(content):
         normalized = raw.replace('/', '-')
         dates.append({'raw': raw, 'absolute': normalized, 'uncertain': False})
-    # 相对
-    for prefix, wd in REL_WEEK_PATTERN.findall(content):
+    # 相对（中文）
+    for prefix, wd in REL_WEEK_CN.findall(content):
         abs_date = _to_weekday_date(msg_time, wd)
         dates.append({
             'raw': f'{prefix}{wd}',
+            'absolute': abs_date,
+            'uncertain': True,
+        })
+    # 相对（英文）
+    for prefix, wd in REL_WEEK_EN.findall(content):
+        wd_lower = wd.lower()
+        base = datetime.fromisoformat(msg_time) if msg_time else None
+        if base is None:
+            continue
+        target_wd = WEEKDAY_MAP[wd_lower]
+        # this week: same or upcoming; next week: same day + 7
+        delta = (target_wd - base.weekday()) % 7
+        if prefix.lower() == 'next':
+            delta += 7
+        elif prefix.lower() == 'this' and delta == 0:
+            pass  # today is the target — keep delta=0
+        abs_date = (base + timedelta(days=delta)).date().isoformat()
+        dates.append({
+            'raw': f'{prefix} {wd}',
             'absolute': abs_date,
             'uncertain': True,
         })

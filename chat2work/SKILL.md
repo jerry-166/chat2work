@@ -55,9 +55,9 @@ license: MIT
    - parser 自动嗅探格式（txt/json），归一化为统一 Message 结构
    - WechatDataAnalysis 的 JSON 取 senderDisplayName 作真名，wxid 保留到 sender_id
 
-2. **场景路由**：调用 `python scripts/router.py messages.json [--mode course] [--target name]`
-   - 若用户给了 --mode，直接用
-   - 否则 router 自动检测（关键词+消息分布）
+2. **场景路由**：调用 `python scripts/router.py messages.json [--mode course|distill] [--target name]`
+   - --mode 由用户意图决定，不猜测聊天内容
+   - 未指定时默认 course-maker；distill 必须显式 --mode distill
    - 输出 scene.json
 
 3. **加载 prompt 模板**：读取 `prompts/<scene>.md`，按模板四段式（Role/Extraction Rules/Output Format/Edge Cases）
