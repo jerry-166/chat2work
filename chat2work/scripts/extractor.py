@@ -12,6 +12,7 @@ Chat2Work extractor — 从 messages.json 全量抽取客观字段。
 """
 
 import re
+from datetime import datetime, timedelta
 
 
 # 链接:保留完整 query string(?pwd=xxx 不截断)。停在空白/中文标点/引号/括号
@@ -49,12 +50,51 @@ def _extract_files(content: str) -> list[str]:
     return FILE_PATTERN.findall(content)
 
 
+# 绝对日期
+ABS_DATE_PATTERN = re.compile(r'(\d{4}[/-]\d{1,2}[/-]\d{1,2})')
+# 相对:"下周X" / "本周X"
+WEEKDAY_MAP = {'一': 0, '二': 1, '三': 2, '四': 3, '五': 4, '六': 5, '日': 6, '天': 6}
+REL_WEEK_PATTERN = re.compile(r'(下周|本周)([一二三四五六日天])')
+
+
+def _to_weekday_date(base_iso: str, weekday_cn: str) -> str:
+    """base_iso 这周的第 weekday_cn 天的日期(ISO 字符串转 YYYY-MM-DD)。"""
+    try:
+        base = datetime.fromisoformat(base_iso)
+    except ValueError:
+        return ''
+    target_wd = WEEKDAY_MAP[weekday_cn]
+    delta = (target_wd - base.weekday()) % 7
+    if delta == 0:
+        delta = 7  # 同一天算"下周"的下一个
+    return (base + timedelta(days=delta)).date().isoformat()
+
+
+def _extract_dates(content: str, msg_time: str) -> list[dict]:
+    dates = []
+    # 绝对
+    for raw in ABS_DATE_PATTERN.findall(content):
+        normalized = raw.replace('/', '-')
+        dates.append({'raw': raw, 'absolute': normalized, 'uncertain': False})
+    # 相对
+    for prefix, wd in REL_WEEK_PATTERN.findall(content):
+        abs_date = _to_weekday_date(msg_time, wd)
+        dates.append({
+            'raw': f'{prefix}{wd}',
+            'absolute': abs_date,
+            'uncertain': True,
+        })
+    return dates
+
+
 def extract_all(messages: list[dict]) -> dict:
     """从 messages 数组抽取所有客观字段。返回 extracted 结构。"""
     links = []
     files = []
+    dates = []
     for idx, msg in enumerate(messages):
         content = msg.get('content', '') or ''
+        msg_time = msg.get('time', '') or ''
         for link in _extract_links(content):
             link['msg_index'] = idx
             link['sender'] = msg.get('sender')
@@ -67,4 +107,7 @@ def extract_all(messages: list[dict]) -> dict:
                 'sender': msg.get('sender'),
                 'time': msg.get('time'),
             })
-    return {'links': links, 'files': files, 'dates': [], 'meeting_codes': []}
+        for d in _extract_dates(content, msg_time):
+            d['msg_index'] = idx
+            dates.append(d)
+    return {'links': links, 'files': files, 'dates': dates, 'meeting_codes': []}

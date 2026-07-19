@@ -63,3 +63,21 @@ def test_extract_files_no_false_positive_on_plain_text():
     result = extract_all(load_messages())
     for f in result['files']:
         assert f['msg_index'] != 5
+
+
+def test_extract_dates_absolute():
+    """绝对日期 YYYY-MM-DD 直接抽。"""
+    result = extract_all(load_messages())
+    absolutes = [d for d in result['dates'] if not d['uncertain']]
+    assert any(d['absolute'] == '2026-07-25' for d in absolutes)
+
+
+def test_extract_dates_relative_marks_uncertain():
+    """相对日期"下周三交"以消息发送时间为基准转绝对,标 uncertain=True。"""
+    result = extract_all(load_messages())
+    # msg#6 (2026-07-15, 周三) "纸质报告下周三交" -> 2026-07-22(下周三)
+    rels = [d for d in result['dates'] if d['uncertain']]
+    assert any(d['msg_index'] == 6 for d in rels)
+    next_week = next(d for d in rels if d['msg_index'] == 6)
+    assert next_week['absolute'] == '2026-07-22'
+    assert '下周' in next_week['raw']

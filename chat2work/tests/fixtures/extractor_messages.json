@@ -6,6 +6,6 @@
     {"sender": "张老师", "sender_id": "wxid_b", "time": "2026-07-10T14:32:00", "content": "提交方式：上传学习通 截止时间：2026-07-25 23:59", "msg_type": "text"},
     {"sender": "张老师", "sender_id": "wxid_b", "time": "2026-07-12T14:01:00", "content": "报告模板发群文件了，叫 实验报告模板.docx；补丁代码 wavego_twin_patch.zip", "msg_type": "text"},
     {"sender": "李同学", "sender_id": "wxid_c", "time": "2026-07-15T10:00:00", "content": "收到，谢谢老师！", "msg_type": "text"},
-    {"sender": "张老师", "sender_id": "wxid_b", "time": "2026-07-15T11:00:00", "content": "纸质报告下周交", "msg_type": "text"}
+    {"sender": "张老师", "sender_id": "wxid_b", "time": "2026-07-15T11:00:00", "content": "纸质报告下周三交", "msg_type": "text"}
   ]
 }
