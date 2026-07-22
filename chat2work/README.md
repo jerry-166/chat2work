@@ -138,13 +138,12 @@ WechatDataAnalysis 可导出 txt/json/html 三种格式，本 skill 优先支持
 - **course-maker** 模式：当前目录下生成 `课程设计-XXX/` 工作目录
 - **person-distiller** 模式：当前目录下生成 `so-张老师.md` 人物画像
 
-## 三种模式
+## 两种模式
 
 | 模式 | 输入 | 输出 | 用途 |
 |------|------|------|------|
 | course-maker | 课程群聊记录 | 树形工作目录 | Claude Code/WorkBuddy 直接进工作 |
 | person-distiller | 群聊 + 目标人名 | SOUL.md 人物画像 | 安装为 expert/skill |
-| knowledge-extractor | 任意群聊 | knowledge-index.md | v2，暂未实现 |
 
 ## course-maker 输出结构
 
@@ -166,11 +165,30 @@ WechatDataAnalysis 可导出 txt/json/html 三种格式，本 skill 优先支持
     └── msg-to-file.json
 ```
 
+## person-distiller 输出结构
+
+person-distiller 采用 6 层递进人格结构（对齐 GitHub 1.1 万星 colleague-skill），产出一份可直接安装为 Claude Code expert 的 `so-{人名}.md` 文件：
+
+```
+so-张老师.md
+├── Layer 0 — 价值观底色           core_values / hard_rules / red_lines
+├── Layer 1 — 基础身份             role / MBTI / tech_stack / known_resources
+├── Layer 2 — 表达风格             speech_style / catchphrases / tone_switches / emoji_habits
+├── Layer 3 — 决策逻辑             tech_preference / problem_solving_path / evaluation_focus / push_or_pause
+├── Layer 4 — 人际网络差异化       audience_specific（对不同对象的语气/话题差异）
+├── Layer 5 — 红线与避坑           avoid_topics / corrections（历史修正记录自动合并）
+└── 辅助信息                       knowledge_domains / recommended_resources / 使用建议 / 溯源信息
+```
+
+**Correction 修正机制**：如果画像与实际不符，用户可在 SOUL.md 的 Layer 5 添加 correction 记录；下次重新蒸馏时会自动合并历史 corrections，画像持续精进。
+
 ## 核心特性
 
 - **provenance 溯源**：任何文件里的 `[src:msg#xxx]` 标签都可在 `_provenance/msg-to-file.json` 反查到原始聊天消息
 - **自动维护的文件导航**：`00_文件信息整理.md` 由 builder 自动生成，重新运行即刷新
 - **deadline 倒计时**：`00_进度看板.md` 自动计算剩余天数
+- **6 层人物蒸馏**：从价值观底色到红线避坑的递进人格结构，输出可直接安装为 expert
+- **Correction 修正机制**：用户反馈自动合并，画像持续精进
 - **多场景 prompt 模板**：在 `prompts/` 加一个 `.md` 即可扩展新场景，零代码改动
 - **MCP 自动采集**：直接从本机微信读取数据，无需手动导出（需 WeChatDataAnalysis）
 
@@ -244,8 +262,7 @@ chat2work/
 │   └── builder.py                  目录/文件实体化
 ├── prompts/
 │   ├── course-maker.md             课程设计场景 prompt 模板
-│   ├── person-distiller.md         人物蒸馏场景 prompt 模板
-│   └── knowledge-extractor.md      （v2 占位）
+│   └── person-distiller.md         人物蒸馏场景 prompt 模板
 └── templates/
     ├── course-workspace/           course-maker 输出模板
     │   ├── 00_README.md.tmpl
