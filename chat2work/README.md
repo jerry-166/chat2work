@@ -60,6 +60,164 @@ course-maker | person-distiller
 工作目录 / 人物画像文件
 ```
 
+## 命令行参考
+
+Chat2Work 提供 6 个独立脚本，每个都有完整的命令行参数。
+
+### mcp_fetcher.py — MCP 自动采集
+
+```
+python scripts/mcp_fetcher.py <操作模式> [参数]
+```
+
+**操作模式（四选一）：**
+
+| 参数 | 说明 |
+|------|------|
+| `--check` | 检测 MCP 连接状态和数据可用性 |
+| `--list` | 列出最近会话 |
+| `--search KEYWORD` | 模糊搜索会话/联系人 |
+| `--name NAME` | 按名字模糊匹配后拉取消息 |
+| `--session USERNAME` | 按会话 ID 精确拉取消息 |
+
+**通用参数：**
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `--limit N` | `50` | 拉取消息条数（`--name` / `--session` 时生效） |
+| `-o`, `--output PATH` | `messages.json` | 输出 JSON 路径 |
+| `--list-limit N` | `20` | `--list` 时显示的会话数量 |
+| `--account WXID` | — | 指定微信账号（多账号时使用） |
+| `--mcp-url URL` | `http://127.0.0.1:10392/mcp` | MCP 服务地址 |
+| `--token TOKEN` | — | MCP Bearer token |
+| `--save-config` | — | 保存当前配置到文件（需配合 `--token`） |
+| `--config-scope user\|local` | `user` | 配置保存范围 |
+
+**示例：**
+```bash
+# 检测 MCP 是否可用
+python scripts/mcp_fetcher.py --check
+
+# 列出最近 30 个会话
+python scripts/mcp_fetcher.py --list --list-limit 30
+
+# 搜索"张老师"
+python scripts/mcp_fetcher.py --search "张老师"
+
+# 拉取最近 200 条消息
+python scripts/mcp_fetcher.py --name "课程设计群" --limit 200 -o messages.json
+
+# 保存配置（一次配置永久生效）
+python scripts/mcp_fetcher.py --save-config --token "你的Token"
+```
+
+### parser.py — 手动导出文件解析
+
+```
+python scripts/parser.py <聊天文件> [-o OUTPUT]
+```
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `chat_file` | （必填） | 聊天记录文件路径，支持 `.txt` / `.json` / `.html` |
+| `-o`, `--output PATH` | `messages.json` | 输出 JSON 路径 |
+
+**示例：**
+```bash
+python scripts/parser.py chat.txt -o messages.json
+python scripts/parser.py chat.json -o messages.json
+```
+
+### router.py — 场景路由
+
+```
+python scripts/router.py <messages.json> [--mode course|distill] [--target NAME] [-o OUTPUT]
+```
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `messages_json` | （必填） | parser 或 mcp_fetcher 产出的 messages.json |
+| `--mode course\|distill` | `course` | 场景模式。`course`=课程工作目录，`distill`=人物蒸馏 |
+| `--target NAME` | 最活跃发言者 | 蒸馏目标人物名（distill 模式使用） |
+| `-o`, `--output PATH` | `scene.json` | 输出路径 |
+
+**示例：**
+```bash
+# 课程模式（默认）
+python scripts/router.py messages.json
+
+# 蒸馏张老师
+python scripts/router.py messages.json --mode distill --target "张老师"
+
+# 显式指定课程模式
+python scripts/router.py messages.json --mode course -o scene.json
+```
+
+### extractor.py — 规则提取
+
+```
+python scripts/extractor.py <messages.json> [-o OUTPUT]
+```
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `messages_file` | （必填） | parser 产出的 messages.json |
+| `-o`, `--output PATH` | `extracted.json` | 输出 JSON 路径 |
+
+纯规则提取链接/文件/提取码/日期/会议号，100% 不丢。
+
+### builder.py — 目录/文件实体化
+
+```
+python scripts/builder.py <llm_output.json> [参数]
+```
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `llm_output` | （必填） | LLM 产出的 JSON 文件 |
+| `--target-dir DIR` | `.` | 产物落地目录 |
+| `--mode course\|distill` | 从 JSON 读取 | 覆盖 JSON 里的 mode |
+| `--skill-dir DIR` | 自动探测 | chat2work skill 根目录（找 templates/） |
+| `--extracted-file PATH` | — | extractor 输出的 extracted.json（链接库主表） |
+| `--messages-file PATH` | — | messages.json 路径（用于三重验证） |
+| `--scenario A\|D` | `A` | 蒸馏场景：`A`=蒸馏活人，`D`=蒸馏自己 |
+| `--archive-previous` | 开启 | 归档旧版本 SOUL.md |
+| `--no-archive` | — | 不归档旧版本 |
+
+### validator.py — 三重验证
+
+```
+python scripts/validator.py <observations.json> <messages.json> --target NAME [--predictions PRED] [-o OUTPUT]
+```
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `observations_json` | （必填） | observations JSON 文件 |
+| `messages_json` | （必填） | 归一化 messages JSON 文件 |
+| `--target NAME` | （必填） | 目标人物名 |
+| `--predictions PATH` | — | predictions JSON 文件（可选） |
+| `-o`, `--output PATH` | `verified.json` | 输出路径 |
+
+**完整流水线示例：**
+```bash
+# Step 1: 获取消息（MCP 自动采集）
+python scripts/mcp_fetcher.py --name "课程设计群" --limit 500 -o messages.json
+
+# Step 2: 场景路由
+python scripts/router.py messages.json --mode distill --target "张老师" -o scene.json
+
+# Step 3: 规则提取
+python scripts/extractor.py messages.json -o extracted.json
+
+# Step 4: LLM 处理（由 Claude Code 宿主执行 prompts/person-distiller.md）
+# → 产出 llm_output.json
+
+# Step 5: 实体化输出
+python scripts/builder.py llm_output.json --mode distill \
+    --extracted-file extracted.json --messages-file messages.json \
+    --target-dir .
+```
+
 ## 安装
 
 ### 方式一：作为 Claude Code / WorkBuddy Skill
@@ -82,61 +240,11 @@ ln -s /path/to/chat2work ~/.workbuddy/skills/chat2work
 
 ```bash
 cd chat2work
-
-# 方式 A：MCP 自动采集（推荐）
 python scripts/mcp_fetcher.py --name "课程设计群" --limit 500 -o messages.json
-
-# 方式 B：手动导出文件
-python scripts/parser.py chat.txt -o messages.json
-
-# 后续流程相同
 python scripts/router.py messages.json --mode course -o scene.json
 # （由宿主 AI 按 prompts/course-maker.md 处理 messages.json，产出 llm_output.json）
 python scripts/builder.py llm_output.json --target-dir .
 ```
-
-## 使用流程
-
-### 快速开始（MCP 自动采集）
-
-1. **配置 MCP**（只需一次）：
-   - 下载 WeChatDataAnalysis：https://wechat-data-analysis.com/
-   - 安装 → 设置 → MCP → 开启服务 → 复制 Token
-   - 运行：`python scripts/mcp_fetcher.py --save-config --token "你的Token"`
-   - 详细步骤见 [MCP_SETUP.md](MCP_SETUP.md)
-
-2. **使用**：
-   ```
-   /chat2work course "课程设计群"
-   /chat2work distill "工作群" --target "王总"
-   ```
-
-### 传统方式（手动导出）
-
-#### Step 1: 导出聊天记录
-
-用以下任一工具导出微信/QQ 群聊：
-- **WechatDataAnalysis** — 微信（主要数据源，推荐导出 `.json`，字段最规整，含真名/群昵称）
-- **qq-chat-exporter**（https://github.com/shuakami/qq-chat-exporter）— QQ
-
-WechatDataAnalysis 可导出 txt/json/html 三种格式，本 skill 优先支持 **json**（senderDisplayName 真名、renderType 消息类型、文件路径都齐全），txt 次之，html 解析尚未完整适配。
-
-#### Step 2: 运行 Chat2Work
-
-在 Claude Code / WorkBuddy 里：
-```
-/chat2work course chat.json
-```
-
-或蒸馏某个人物：
-```
-/chat2work distill chat.json --target "张老师"
-```
-
-#### Step 3: 查看产物
-
-- **course-maker** 模式：当前目录下生成 `课程设计-XXX/` 工作目录
-- **person-distiller** 模式：当前目录下生成 `so-张老师.md` 人物画像
 
 ## 两种模式
 
@@ -202,39 +310,20 @@ so-张老师.md
 pip install jinja2 beautifulsoup4
 ```
 
-## MCP 配置方式
+## MCP 配置
 
-详细配置指南见 [MCP_SETUP.md](MCP_SETUP.md)
+详细配置指南见 [MCP_SETUP.md](MCP_SETUP.md)。快速配置：
 
-### 配置优先级
+```bash
+# 保存配置（一次配置永久生效）
+python scripts/mcp_fetcher.py --save-config --token "你的Token"
+```
 
-从高到低：
+配置优先级（从高到低）：
 1. 命令行参数 `--mcp-url` / `--token`
 2. 环境变量 `CHAT2WORK_MCP_URL` / `CHAT2WORK_MCP_TOKEN`
 3. 用户目录配置文件 `~/.chat2work/mcp_config.json`
 4. 工作目录配置文件 `./.chat2work/mcp_config.json`
-
-### 常用命令
-
-```bash
-# 检测 MCP 状态
-python scripts/mcp_fetcher.py --check
-
-# 保存配置（推荐）
-python scripts/mcp_fetcher.py --save-config --token "你的Token"
-
-# 列出最近会话
-python scripts/mcp_fetcher.py --list
-
-# 搜索会话
-python scripts/mcp_fetcher.py --search "张老师"
-
-# 按名字拉取消息
-python scripts/mcp_fetcher.py --name "课程设计群" --limit 500 -o messages.json
-
-# 按会话 ID 拉取
-python scripts/mcp_fetcher.py --session "123456789@chatroom" --limit 1000 -o messages.json
-```
 
 ## 扩展新场景
 

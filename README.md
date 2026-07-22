@@ -7,14 +7,18 @@
 ## 快速开始
 
 ```bash
-# MCP 自动采集（推荐）
+# MCP 自动采集（推荐，直接从微信拉数据）
 python chat2work/scripts/mcp_fetcher.py --name "课程设计群" --limit 500 -o messages.json
 
 # 或手动导出文件
 python chat2work/scripts/parser.py chat.txt -o messages.json
-```
 
-安装和使用详见 **[chat2work/README.md](chat2work/README.md)**
+# 场景路由 + 规则提取 + builder 实体化
+python chat2work/scripts/router.py messages.json --mode course
+python chat2work/scripts/extractor.py messages.json
+# （LLM 处理由 Claude Code 宿主执行）
+python chat2work/scripts/builder.py llm_output.json --target-dir .
+```
 
 ## 两种模式
 
@@ -32,4 +36,4 @@ python chat2work/scripts/parser.py chat.txt -o messages.json
 
 ---
 
-详细文档、使用流程、配置指南见 [chat2work/README.md](chat2work/README.md)
+**完整命令行参考、配置指南、输出结构说明** → [chat2work/README.md](chat2work/README.md)

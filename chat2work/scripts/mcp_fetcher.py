@@ -52,6 +52,11 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import URLError
 
+# ── 可调常量 ──
+SESSION_LIST_LIMIT = 200   # list_sessions 回退时一次拉取的会话数
+FETCH_SAFETY_LIMIT = 5000  # 单次拉取消息的安全上限（防止意外无限拉取）
+PAGE_SIZE = 50             # MCP 单页最大消息数（WeChatDataAnalysis 限制）
+
 
 # ============================================================
 # 配置管理
@@ -355,7 +360,7 @@ def fetch_session_messages(mcp: WeChatMCP, username: str, limit: int = 50,
     """
     all_msgs = []
     offset = 0
-    page_size = min(limit, 50)  # 单页不超过 50
+    page_size = min(limit, PAGE_SIZE)  # 单页不超过 PAGE_SIZE
 
     while len(all_msgs) < limit:
         params = {
@@ -379,8 +384,8 @@ def fetch_session_messages(mcp: WeChatMCP, username: str, limit: int = 50,
 
         offset += len(messages)
         # 安全上限，防止意外拉取过多
-        if offset > 5000:
-            print(f"  ⚠️  已达 5000 条安全上限，停止拉取", file=sys.stderr)
+        if offset > FETCH_SAFETY_LIMIT:
+            print(f"  ⚠️  已达 {FETCH_SAFETY_LIMIT} 条安全上限，停止拉取", file=sys.stderr)
             break
 
     return all_msgs[:limit]
@@ -411,7 +416,7 @@ def resolve_session(mcp: WeChatMCP, keyword: str, account: str = None) -> str | 
 
     # 策略 2：list_sessions + 本地模糊匹配
     try:
-        list_params = {"limit": 200}  # 多拉一点，增加匹配概率
+        list_params = {"limit": SESSION_LIST_LIMIT}  # 多拉一点，增加匹配概率
         if account:
             list_params["account"] = account
         result = mcp.call("wechat.chat.list_sessions", list_params)
