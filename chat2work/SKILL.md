@@ -90,16 +90,21 @@ license: MIT
    - 如果用户说了群名/人名 → 用 `--search` 搜索并确认
    - 如果不确定 → 用 `--list` 列出最近会话让用户选
 
-3. **拉取消息**：
+3. **确认数据量**：**必须**询问用户要拉取多少条消息。不同场景参考：
+   - **课程资料整理**（course-maker）：建议 300-1000 条，保证覆盖完整课程周期
+   - **人物蒸馏**（person-distiller）：建议 200-500 条，重点看发言密度，发言少的人可能需更多
+   - 用户未明确时，course-maker 默认 `--limit 500`，person-distiller 默认 `--limit 200`
+
+4. **拉取消息**：
    ```bash
    # 用名字自动匹配
-   python scripts/mcp_fetcher.py --name "课程设计群" --limit 500 -o messages.json
+   python scripts/mcp_fetcher.py --name "目标会话名" --limit <用户指定的条数> -o messages.json
 
    # 或用会话 ID 精确拉取
-   python scripts/mcp_fetcher.py --session "123456789@chatroom" --limit 1000 -o messages.json
+   python scripts/mcp_fetcher.py --session "123456789@chatroom" --limit <用户指定的条数> -o messages.json
    ```
 
-4. **后续步骤与工作流 B 相同**（场景路由 → 规则提取 → LLM 处理 → 实体化输出）
+5. **后续步骤与工作流 B 相同**（场景路由 → 规则提取 → LLM 处理 → 实体化输出）
 
 ### 工作流 B：手动导出文件
 
@@ -121,8 +126,8 @@ license: MIT
    - 产出的 extracted.json 喂给 LLM 作输入，LLM 不再自己扫链接，只做语义标注（why/title）
 
 5. **LLM 处理**：把 messages.json + extracted.json + prompt 模板 一起作为输入，由宿主 AI（你）执行提取
-   - course-maker：refs 字段的 url/extract_code/src_msg 直接从 extracted.links 取，LLM 只补 why/title；输出目录树 JSON（含 tasks/refs/deadline/dir_tree）
-   - person-distiller：输出 SOUL.md 内容
+   - **course-maker**：refs 字段的 url/extract_code/src_msg 直接从 extracted.links 取，LLM 只补 why/title；输出目录树 JSON（含 tasks/refs/deadline/dir_tree）
+   - **person-distiller**：如果消息总数超过用户指定的抽样条数，取**最近 N 条**（而非随机抽样，因为近期消息更能反映当前状态）；输出 SOUL.md 内容
 
 6. **实体化输出**：调用 `python scripts/builder.py <llm_output.json> --extracted-file extracted.json [--target-dir .]`
    - builder 用 jinja2 渲染 templates/ 下的模板
