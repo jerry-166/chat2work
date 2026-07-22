@@ -1,0 +1,18 @@
+{
+  "total_open": 5,
+  "total_fixed": 0,
+  "by_severity": {
+    "major": 3,
+    "minor": 2
+  },
+  "by_source": {
+    "ai-observed": 4,
+    "user-review": 1
+  },
+  "by_month": {
+    "2026-07": {
+      "opened": 5,
+      "fixed": 0
+    }
+  }
+}

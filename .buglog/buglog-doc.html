@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buglog 系统技术文档</title>
+<style>
+  :root {
+    --bg: #ffffff; --surface: #f6f8fa; --border: #d0d7de;
+    --text: #1f2328; --text-muted: #656d76;
+    --blue: #0969da; --green: #1a7f37; --yellow: #9a6700;
+    --red: #cf222e; --purple: #8250df; --cyan: #0550ae;
+    --orange: #bc4c00;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+  .header { text-align: center; padding: 3rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+  .header h1 { font-size: 2.4rem; color: var(--blue); }
+  .header .subtitle { color: var(--text-muted); margin-top: 0.5rem; font-size: 1.1rem; }
+
+  .section { margin-bottom: 3rem; }
+  .section h2 { font-size: 1.5rem; color: var(--blue); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+  .section h3 { font-size: 1.2rem; color: var(--cyan); margin: 1.5rem 0 0.8rem; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+  .card h4 { color: var(--green); margin-bottom: 0.5rem; }
+  .card .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-right: 0.5rem; }
+  .badge-blue { background: #ddf4ff; color: var(--blue); }
+  .badge-green { background: #dafbe1; color: var(--green); }
+  .badge-yellow { background: #fff8c5; color: var(--yellow); }
+  .badge-red { background: #ffebe9; color: var(--red); }
+  .badge-purple { background: #fbefff; color: var(--purple); }
+  .badge-cyan { background: #ddf4ff; color: var(--cyan); }
+  .badge-orange { background: #fff1e5; color: var(--orange); }
+
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.7rem 1rem; border: 1px solid var(--border); text-align: left; }
+  th { background: var(--surface); color: var(--cyan); font-weight: 600; }
+  tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+
+  code { background: #eff1f3; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: var(--orange); }
+  pre { background: #eff1f3; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; margin: 1rem 0; }
+  pre code { background: none; padding: 0; color: var(--text); }
+
+  .flowchart { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 1.5rem 0; }
+  .flow-node { background: var(--surface); border: 2px solid var(--border); border-radius: 10px; padding: 0.7rem 1.5rem; min-width: 200px; text-align: center; position: relative; }
+  .flow-node.trigger { border-color: var(--blue); }
+  .flow-node.action { border-color: var(--green); }
+  .flow-node.decision { border-color: var(--yellow); }
+  .flow-node.output { border-color: var(--purple); }
+  .flow-node .fn { font-size: 0.85rem; color: var(--text-muted); }
+  .flow-arrow { color: var(--text-muted); font-size: 1.2rem; line-height: 1; }
+  .flow-arrow-branch { display: flex; gap: 3rem; align-items: flex-start; margin-top: 0; }
+  .flow-branch { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .flow-branch-label { font-size: 0.8rem; color: var(--yellow); margin-bottom: 0.3rem; }
+
+  .arch-diagram { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+  @media (max-width: 700px) { .arch-diagram { grid-template-columns: 1fr; } }
+  .arch-box { border: 2px solid var(--border); border-radius: 10px; padding: 1rem; }
+  .arch-box h4 { margin-bottom: 0.6rem; }
+  .arch-box-hooks { border-color: var(--blue); }
+  .arch-box-utils { border-color: var(--purple); }
+  .arch-box-data { border-color: var(--green); }
+  .arch-box-list { list-style: none; }
+  .arch-box-list li { padding: 0.25rem 0; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+  .arch-box-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .arch-box-hooks .arch-box-list li::before { background: var(--blue); }
+  .arch-box-utils .arch-box-list li::before { background: var(--purple); }
+  .arch-box-data .arch-box-list li::before { background: var(--green); }
+
+  .sev-major { color: var(--red); font-weight: 600; }
+  .sev-minor { color: var(--yellow); font-weight: 600; }
+
+  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem 1.5rem; margin-bottom: 2rem; }
+  .toc h3 { color: var(--cyan); margin-bottom: 0.8rem; }
+  .toc ol { padding-left: 1.5rem; }
+  .toc li { margin: 0.3rem 0; }
+  .toc a { color: var(--blue); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>Buglog + 知识库读写 系统技术文档</h1>
+  <div class="subtitle">Claude Code Hook 驱动的 Bug 日志 + Obsidian 知识库读写机制（v2）</div>
+</div>
+
+<div class="toc">
+  <h3>目录</h3>
+  <ol>
+    <li><a href="#arch">架构总览</a></li>
+    <li><a href="#files">文件组成与职责</a></li>
+    <li><a href="#data">数据模型</a></li>
+    <li><a href="#flows">流程与逻辑</a></li>
+    <li><a href="#kb">知识库读写机制</a></li>
+    <li><a href="#io">输入与输出</a></li>
+    <li><a href="#config">Hook 注册配置</a></li>
+    <li><a href="#detection">检测关键词</a></li>
+    <li><a href="#examples">运行示例</a></li>
+  </ol>
+</div>
+
+<!-- 1. ARCH -->
+<div class="section" id="arch">
+  <h2>1. 架构总览</h2>
+  <p>系统由四层组成，Buglog 与知识库共享通用工具层：</p>
+  <div class="arch-diagram">
+    <div class="arch-box arch-box-hooks">
+      <h4>Hook 脚本层</h4>
+      <ul class="arch-box-list">
+        <li>kb-inject.js（SessionStart）</li>
+        <li>bug-detect-user-report.js</li>
+        <li>bug-capture.js</li>
+        <li>bug-failure-capture.js</li>
+      </ul>
+    </div>
+    <div class="arch-box arch-box-utils">
+      <h4>共享工具层</h4>
+      <ul class="arch-box-list">
+        <li>hook-utils.js（通用：readStdin/outputContext）</li>
+        <li>bug-utils.js（bug 专用：scanBugs/updateStats）</li>
+        <li>kb-utils.js（知识库：generateKnowledgeMap）</li>
+      </ul>
+    </div>
+    <div class="arch-box arch-box-data">
+      <h4>数据持久层</h4>
+      <ul class="arch-box-list">
+        <li>.buglog/bugs/*.md + index.md + stats.json</li>
+        <li>.failure_counts.json /.edit_counts.json（临时）</li>
+        <li>~/.claude/rules/*.md（规则层）</li>
+        <li>Obsidian vault（知识存储）</li>
+      </ul>
+    </div>
+  </div>
+  <h3>1.2 Layer 分层</h3>
+  <table>
+    <thead><tr><th>Layer</th><th>机制</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>Rules 层</td><td>~/.claude/rules/*.md 会话启动时原生加载</td><td>确定性规则（分类：通用/前端/后端/游戏）</td></tr>
+      <tr><td>知识库地图层</td><td>SessionStart hook 扫描 Obsidian vault 注入精简索引</td><td>分类 -> 文件名 -> 一句话描述</td></tr>
+      <tr><td>Buglog 层</td><td>PostToolUse/PostToolUseFailure/UserPromptSubmit hook 检测</td><td>项目 bug 记录、通用命令错误</td></tr>
+    </table>
+  </div>
+
+<!-- 2. FILES -->
+<div class="section" id="files">
+  <h2>2. 文件组成与职责</h2>
+  <table>
+    <thead><tr><th>文件</th><th>Hook 事件</th><th>Matcher</th><th>职责</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>hook-utils.js</code></td>
+        <td>—</td>
+        <td>—</td>
+        <td><span class="badge badge-purple">通用</span> readStdin() / outputContext()，所有 hook 共享</td>
+      </tr>
+      <tr>
+        <td><code>bug-utils.js</code></td>
+        <td>—</td>
+        <td>—</td>
+        <td>Bug 专用：scanBugs / updateStats / updateIndex / getNextBugId / recordFailure / getEscalationMessage（count&lt;2 返回 null）</td>
+      </tr>
+      <tr>
+        <td><code>kb-utils.js</code></td>
+        <td>—</td>
+        <td>—</td>
+        <td>知识库专用：parseKbIndex() 解析 Obsidian claude.md 索引 / generateKnowledgeMap() 生成精简地图</td>
+      </tr>
+      <tr>
+        <td><code>kb-inject.js</code></td>
+        <td><span class="badge badge-purple">SessionStart</span></td>
+        <td><code>*</code></td>
+        <td>会话启动时生成知识库地图，通过 additionalContext 注入到会话上下文</td>
+      </tr>
+      <tr>
+        <td><code>bug-detect-user-report.js</code></td>
+        <td><span class="badge badge-cyan">UserPromptSubmit</span></td>
+        <td><code>*</code></td>
+        <td>检测辱骂关键词 -> 自动写入；检测 bug 关键词 -> 修复指引</td>
+      </tr>
+      <tr>
+        <td><code>bug-capture.js</code></td>
+        <td><span class="badge badge-green">PostToolUse</span></td>
+        <td><code>Edit|Write</code></td>
+        <td>追踪编辑次数，>=2 次或 >=5 文件时触发提醒</td>
+      </tr>
+      <tr>
+        <td><code>bug-failure-capture.js</code></td>
+        <td><span class="badge badge-red">PostToolUseFailure</span></td>
+        <td><code>*</code></td>
+        <td>Bash 命令追踪重复失败。count=1: <span class="sev-minor">静默</span> / count 2-3: 警告 / count>=4: 强烈警告</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 3. DATA -->
+<div class="section" id="data">
+  <h2>3. 数据模型</h2>
+
+  <h3>3.1 Bug 记录（Markdown + YAML Frontmatter）</h3>
+  <div class="card">
+    <pre><code>---
+id: BUG-001
+title: 一句话描述
+status: open | fixed
+severity: major | minor
+source: ai-observed | user-review | user-frustration
+reported_at: 2026-07-21T22:10:00
+fixed_at: 2026-07-21T23:00:00  <!-- 修复时补充 -->
+---
+
+## &lt;title&gt;
+
+### 现象
+### 根因分析
+### 修复过程
+### 经验教训</code></pre>
+  </div>
+
+  <h3>3.2 stats.json</h3>
+  <div class="card">
+    <pre><code>{
+  "total_open": 5, "total_fixed": 0,
+  "by_severity": { "major": 3, "minor": 2 },
+  "by_source": { "ai-observed": 4, "user-review": 1 },
+  "by_month": { "2026-07": { "opened": 5, "fixed": 0 } }
+}</code></pre>
+  </div>
+
+  <h3>3.3 Source 类型说明</h3>
+  <table>
+    <thead><tr><th>Source</th><th>含义</th><th>触发方式</th></tr></thead>
+    <tbody>
+      <tr><td><code>ai-observed</code></td><td>AI 在操作中自己发现的问题</td><td>PostToolUseFailure 重复失败检测</td></tr>
+      <tr><td><code>user-review</code></td><td>用户指出的问题</td><td>UserPromptSubmit bug 关键词检测</td></tr>
+      <tr><td><code>user-frustration</code></td><td>用户骂人/表达强烈不满</td><td>UserPromptSubmit 辱骂关键词检测，自动写入</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 4. FLOWS -->
+<div class="section" id="flows">
+  <h2>4. 流程与逻辑</h2>
+
+  <h3>4.1 工具调用检测流程</h3>
+  <div class="flowchart">
+    <div class="flow-node trigger"><strong>会话中：工具调用</strong></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-arrow-branch">
+      <div class="flow-branch">
+        <div class="flow-branch-label">Edit/Write 成功</div>
+        <div class="flow-node action">bug-capture.js<div class="fn">追踪编辑次数，>=2 或 >=5 文件时提醒</div></div>
+      </div>
+      <div class="flow-branch">
+        <div class="flow-branch-label">任意工具失败</div>
+        <div class="flow-node action">bug-failure-capture.js<div class="fn">记录失败签名，升级提醒</div></div>
+      </div>
+      <div class="flow-branch">
+        <div class="flow-branch-label">用户消息</div>
+        <div class="flow-node action">bug-detect-user-report.js<div class="fn">检测 bug 报告 / 辱骂</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>4.2 重复失败升级流程</h3>
+  <div class="flowchart">
+    <div class="flow-node trigger"><strong>Bash 工具失败</strong><div class="fn">PostToolUseFailure 触发</div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node action">提取命令签名<div class="fn">getFailureSignature()：脱敏 token/密码等参数</div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node action">累加失败计数<div class="fn">recordFailure()：写入 .failure_counts.json</div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node decision">失败次数？</div>
+    <div class="flow-arrow-branch">
+      <div class="flow-branch">
+        <div class="flow-branch-label">count = 1</div>
+        <div class="flow-node output">静默<div class="fn">不发送任何通知，仅记录计数</div></div>
+      </div>
+      <div class="flow-branch">
+        <div class="flow-branch-label">count 2-3</div>
+        <div class="flow-node output">[!] 警告<div class="fn">"同一命令连续失败 N 次，请评估..."</div></div>
+      </div>
+      <div class="flow-branch">
+        <div class="flow-branch-label">count >= 4</div>
+        <div class="flow-node output">[!!] 强烈警告<div class="fn">"强烈建议调用 /buglog add 记录此问题"</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>4.3 用户消息检测流程</h3>
+  <div class="flowchart">
+    <div class="flow-node trigger"><strong>UserPromptSubmit</strong><div class="fn">用户提交消息</div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-node decision">包含辱骂关键词？</div>
+    <div class="flow-arrow-branch">
+      <div class="flow-branch">
+        <div class="flow-branch-label">是</div>
+        <div class="flow-node action">自动写入 .buglog/bugs/<div class="fn">source: user-frustration</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node output">提醒 AI 反思<div class="fn">"请认真反思本次会话中可能存在的问题"</div></div>
+      </div>
+      <div class="flow-branch">
+        <div class="flow-branch-label">否</div>
+        <div class="flow-node decision">包含 bug 关键词？</div>
+        <div class="flow-arrow-branch">
+          <div class="flow-branch">
+            <div class="flow-branch-label">是</div>
+            <div class="flow-node output">修复指引 + 回溯提醒<div class="fn">"请回顾本次会话中是否有多次失败..."</div></div>
+          </div>
+          <div class="flow-branch">
+            <div class="flow-branch-label">否</div>
+            <div class="flow-node action">静默退出<div class="fn">process.exit(0)</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>4.5 Bug Close 与 Rule 抽取</h3>
+  <div class="flowchart">
+    <div class="flow-node trigger"><strong>/buglog close BUG-NNN</strong></div>
+    <div class="flow-arrow">|</div>
+    <div class="flow-node action">更新 frontmatter: status fixed + fixed_at</div>
+    <div class="flow-arrow">|</div>
+    <div class="flow-node decision">AI 评估：此 bug 有通用价值？</div>
+    <div class="flow-arrow-branch">
+      <div class="flow-branch">
+        <div class="flow-branch-label">是</div>
+        <div class="flow-node output">提醒用户："要抽取为 rule 吗？"<div class="fn">用户确认后写入 rules/&lt;分类&gt;.md</div></div>
+      </div>
+      <div class="flow-branch">
+        <div class="flow-branch-label">否</div>
+        <div class="flow-node action">完成</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KB SECTION -->
+<div class="section" id="kb">
+  <h2>5. 知识库读写机制</h2>
+
+  <h3>5.1 会话启动：知识地图注入</h3>
+  <div class="card">
+    <p>每次会话启动时，<code>kb-inject.js</code>（SessionStart hook）扫描 Obsidian 知识库的 <code>claude.md</code> 索引，生成精简地图通过 <code>additionalContext</code> 注入。</p>
+    <p><strong>注入内容示例：</strong></p>
+    <pre><code>[知识库地图]
+开发环境 - 工具链管理(nvm/Git配置)、命令行环境(Git Bash/WSL/Docker/tmux)
+Claude Code - Hooks钩子系统、Buglog系统、skill管理系统
+AI与LLM - Agent框架(langchain/langgraph)、RAG系统
+...
+
+遇到相关问题时，读取 D:/ASUS/Documents/obsidian/new/ 下对应目录的文件。
+读取前先判断时效性（模型能力 + 必要时联网验证）。
+使用知识后，更新文件的 ref_count frontmatter（+1）。
+过时知识不要使用，采用新方案后更新知识库文件。</code></pre>
+  </div>
+
+  <h3>5.2 时效性判断流程</h3>
+  <div class="flowchart">
+    <div class="flow-node trigger"><strong>遇到问题，查地图找到相关文件</strong></div>
+    <div class="flow-arrow">|</div>
+    <div class="flow-node action">读取知识库文件内容</div>
+    <div class="flow-arrow">|</div>
+    <div class="flow-node decision">判断时效性</div>
+    <div class="flow-arrow-branch">
+      <div class="flow-branch">
+        <div class="flow-branch-label">相关且有效</div>
+        <div class="flow-node output">使用知识 + ref_count++</div>
+      </div>
+      <div class="flow-branch">
+        <div class="flow-branch-label">相关但过时</div>
+        <div class="flow-node output">新方案解决 + 更新知识库 + ref_count++</div>
+      </div>
+      <div class="flow-branch">
+        <div class="flow-branch-label">无关</div>
+        <div class="flow-node output">自己解决 -> 记录新知识</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>5.3 Rules 层</h3>
+  <div class="card">
+    <p>知识库 <code>rules/</code> 目录按领域分类（通用/前端/后端/游戏），文件复制到 <code>~/.claude/rules/</code> 下，由 Claude Code 在会话启动时原生加载。</p>
+    <p><strong>Rules 增长来源：</strong></p>
+    <ul>
+      <li><strong>通用 Bug 抽取</strong>（主要）：bug 记录到 buglog -> /buglog close 时 AI 评估 -> 人工确认 -> 提炼写入 rules/</li>
+      <li><strong>知识升级</strong>（未来）：ref_count 高的知识条目半自动升级为 rule</li>
+      <li><strong>手动添加</strong>：直接编辑 rules 文件</li>
+    </ul>
+  </div>
+
+  <h3>5.4 /recall 手动检索</h3>
+  <div class="card">
+    <p><code>/recall &lt;关键词&gt;</code> 技能在 Obsidian 知识库中搜索相关内容：</p>
+    <ol>
+      <li>读 claude.md 索引，关键词匹配目录/文件名</li>
+      <li>定位最相关的 1-3 个文件并读取</li>
+      <li>判断时效性后展示结果 + ref_count++</li>
+    </ol>
+  </div>
+
+  <h3>5.5 参考次数</h3>
+  <div class="card">
+    <p>知识库文件的 frontmatter 中包含 <code>ref_count</code> 字段，每次被参考 +1：</p>
+    <pre><code>---
+ref_count: 5
+---</code></pre>
+    <p>用于识别最有价值的知识，判断哪些内容需要更新或清理。</p>
+  </div>
+
+  <h3>5.6 数据流总览</h3>
+  <div class="flowchart">
+    <div class="flow-node trigger"><strong>会话启动</strong></div>
+    <div class="flow-arrow">|</div>
+    <div class="flow-node action">Layer 1: ~/.claude/rules/*.md 自动加载</div>
+    <div class="flow-node action">Layer 2: SessionStart hook 注入知识地图</div>
+    <div class="flow-arrow">|</div>
+    <div class="flow-node trigger"><strong>工作中遇到问题</strong></div>
+    <div class="flow-arrow">|</div>
+    <div class="flow-node action">查地图 -> 定位文件 -> 读取 -> 判断时效性</div>
+    <div class="flow-node action">命令失败 -> hook 检测 -> count>=2 提醒 + 建议查知识库</div>
+    <div class="flow-node action">/buglog close -> 评估通用性 -> 抽取 rule</div>
+    <div class="flow-arrow">|</div>
+    <div class="flow-node trigger"><strong>会话结束</strong></div>
+    <div class="flow-arrow">|</div>
+    <div class="flow-node action">有价值知识自动沉淀到知识库文件</div>
+    <div class="flow-arrow">|</div>
+    <div class="flow-node output">下次会话：新沉淀的知识被地图索引覆盖</div>
+  </div>
+</div>
+
+<!-- 5. IO (renumbered to 6) -->
+<div class="section" id="io">
+  <h2>6. 输入与输出</h2>
+
+  <h3>5.1 各 Hook 的输入（stdin JSON）</h3>
+  <table>
+    <thead><tr><th>Hook 事件</th><th>stdin 字段</th><th>关键字段说明</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>UserPromptSubmit</td>
+        <td><code>{ "prompt": "..." }</code></td>
+        <td>用户提交的完整消息文本</td>
+      </tr>
+      <tr>
+        <td>PostToolUse</td>
+        <td><code>{ "tool_name": "...", "tool_input": {...} }</code></td>
+        <td>tool_name: "Edit"/"Write"；tool_input.file_path</td>
+      </tr>
+      <tr>
+        <td>PostToolUseFailure</td>
+        <td><code>{ "tool_name": "...", "tool_input": {...}, "error": "..." }</code></td>
+        <td>error: 错误描述文本</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>5.2 Hook 输出协议</h3>
+  <table>
+    <thead><tr><th>输出格式</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>{ "hookSpecificOutput": { "hookEventName": "...", "additionalContext": "..." } }</code></td>
+        <td>通过 additionalContext 向 Claude 注入提醒消息</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>5.3 副作用输出</h3>
+  <table>
+    <thead><tr><th>操作</th><th>执行者</th><th>写入位置</th></tr></thead>
+    <tbody>
+      <tr><td>创建 bug 文件</td><td>bug-detect-user-report.js（辱骂时自动创建）、/buglog add（手动）</td><td><code>.buglog/bugs/*.md</code></td></tr>
+      <tr><td>标记 bug 为 fixed</td><td>/buglog close（AI 手动调用）</td><td><code>.buglog/bugs/*.md</code>（改 frontmatter）</td></tr>
+      <tr><td>更新统计</td><td>写入 bug 后</td><td><code>.buglog/stats.json</code></td></tr>
+      <tr><td>更新索引</td><td>写入 bug 后</td><td><code>.buglog/index.md</code></td></tr>
+      <tr><td>失败计数（临时）</td><td>bug-failure-capture.js</td><td><code>.buglog/.failure_counts.json</code></td></tr>
+      <tr><td>编辑计数（临时）</td><td>bug-capture.js</td><td><code>.buglog/.edit_counts.json</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 6. CONFIG -->
+<div class="section" id="config">
+  <h2>7. Hook 注册配置</h2>
+  <div class="card">
+    <p>所有 hook 在 <code>~/.claude/settings.json</code> 的 <code>hooks</code> 字段中注册：</p>
+    <pre><code>"hooks": {
+  "SessionStart": [{
+    "matcher": "",
+    "hooks": [{ "type": "command", "command": "node \"$HOME/.claude/hooks/kb-inject.js\"", "timeout": 5 }]
+  }],
+  "UserPromptSubmit": [{
+    "matcher": "",
+    "hooks": [{ "type": "command", "command": "node \"$HOME/.claude/hooks/bug-detect-user-report.js\"", "timeout": 5 }]
+  }],
+  "PostToolUse": [{
+    "matcher": "Edit|Write",
+    "hooks": [{ "type": "command", "command": "node \"$HOME/.claude/hooks/bug-capture.js\"", "timeout": 3 }]
+  }],
+  "PostToolUseFailure": [{
+    "matcher": "",
+    "hooks": [{ "type": "command", "command": "node \"$HOME/.claude/hooks/bug-failure-capture.js\"", "timeout": 3 }]
+  }]
+}</code></pre>
+  </div>
+</div>
+
+<!-- 7. DETECTION -->
+<div class="section" id="detection">
+  <h2>8. 检测关键词</h2>
+
+  <h3>7.1 Bug 报告关键词（30+）</h3>
+  <div class="card">
+    <table>
+      <thead><tr><th>类别</th><th>关键词</th></tr></thead>
+      <tbody>
+        <tr><td>功能异常</td><td><code>报错 错误 不对 没修好 白屏 崩溃 异常 闪退 卡死 不工作 没反应 出问题 有缺陷 修一下 还是不行 没变 还是一样 测试失败 改一下 这里不对 你看下 有问题 不行 过不去 挂了 报了个错 抛异常 跑不过 测试没过</code></td></tr>
+        <tr><td>English</td><td><code>doesn't work not working broken crash error fail bug fix incorrect wrong issue defect regression still broken not fixed doesn't pass test failed</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>7.2 辱骂/不满关键词（20+）</h3>
+  <div class="card">
+    <table>
+      <thead><tr><th>类别</th><th>关键词</th></tr></thead>
+      <tbody>
+        <tr><td>直接贬低</td><td><code>你很傻 你傻 太蠢 太笨 智障 脑子有问题 蠢死了 笨死了 无语了 有没有搞错</code></td></tr>
+        <tr><td>脏话</td><td><code>傻逼 sb 废物 垃圾 狗屎 脑残 白痴 弱智 傻叉 大傻</code></td></tr>
+        <tr><td>English</td><td><code>stupid dumb idiot trash useless moron pathetic</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>7.3 黑名单（命中则跳过检测）</h3>
+  <div class="card">
+    <code>buglog /buglog no bugs 没有bug 记录bug</code>
+  </div>
+</div>
+
+<!-- 8. EXAMPLES -->
+<div class="section" id="examples">
+  <h2>9. 运行示例</h2>
+
+  <h3>9.1 场景：同一命令连续失败（新逻辑）</h3>
+  <div class="card">
+    <pre><code># 第 1 次失败
+（静默，不发送任何通知）
+
+# 第 2 次失败
+[Buglog] [!] 同一命令连续失败 2 次，请评估是否需要记录 bug。
+命令: python scripts/mcp_fetcher.py --check
+错误: Exit code 49
+
+# 第 4 次失败
+[Buglog] [!!] 同一命令连续失败 4 次！强烈建议调用 /buglog add 记录此问题。
+命令: python scripts/mcp_fetcher.py --check
+错误: Exit code 49
+如果这不是 bug，请忽略。</code></pre>
+  </div>
+
+  <h3>9.2 场景：用户骂人</h3>
+  <div class="card">
+    <pre><code>用户: "你太蠢了，这么简单都搞不定"
+
+[Buglog] 检测到用户表达不满，已自动记录为 BUG-006。
+请认真反思本次会话中可能存在的问题，并在 bug 记录的"改进措施"部分填写具体改进方案。
+用户的原始消息: "你太蠢了，这么简单都搞不定"
+
+→ 自动创建 .buglog/bugs/2026-07-21-user-frustration-.md
+→ source: user-frustration, severity: minor</code></pre>
+  </div>
+
+  <h3>9.3 场景：用户指出遗漏问题</h3>
+  <div class="card">
+    <pre><code>用户: "还是有问题，你没有发现这次对话中有很多错误"
+
+[Buglog] 用户报告了一个 bug。请：
+1. 先确认你理解了用户描述的问题
+2. 定位根因后再修复
+...
+另外，用户可能在指出本次会话中遗漏的问题。请回顾本次会话中是否有多次失败、
+报错、用户纠正的情况，如果有被遗漏的问题，调用 /buglog add 逐条记录。</code></pre>
+  </div>
+
+  <h3>9.4 场景：标记 Bug 为已修复并抽取 Rule</h3>
+  <div class="card">
+    <pre><code>AI: /buglog close BUG-001
+
+-> 更新 .buglog/bugs/2026-07-21-python-exit-code-49.md
+  status: open -> fixed
+  添加 fixed_at: 2026-07-22T10:00:00
+-> 重新生成 index.md + stats.json
+-> AI 评估：此 bug 涉及 Windows Python 命令兼容性，有通用价值
+-> 提醒用户："这个 bug 是通用的（Windows py vs python3），要抽取为 rule 吗？"
+-> 用户确认后写入 ~/.claude/rules/通用.md + Obsidian rules/通用.md</code></pre>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
