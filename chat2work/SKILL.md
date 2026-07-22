@@ -20,7 +20,7 @@ license: MIT
 
 ### 🚀 方式一：MCP 自动采集（推荐）
 
-如果本机安装了 **WeChatDataAnalysis** 并开启了 MCP 服务，chat2work 可以**直接从微信读取数据**，不需要手动导出任何文件。
+如果本机安装了 **[WeChatDataAnalysis](https://github.com/LifeArchiveProject/WeChatDataAnalysis)** 并开启了 MCP 服务，chat2work 可以**直接从微信读取数据**，不需要手动导出任何文件。
 
 **首次使用请先配置**：详细步骤见 [MCP_SETUP.md](MCP_SETUP.md)
 
@@ -146,7 +146,7 @@ license: MIT
 >
 > **两种选择：**
 > 1. **配置 MCP（推荐）** — 以后直接从微信读数据，不用手动导出
->    - 下载 WeChatDataAnalysis：https://wechat-data-analysis.com/
+>    - 下载 WeChatDataAnalysis：https://github.com/LifeArchiveProject/WeChatDataAnalysis
 >    - 安装后打开 → 设置 → MCP → 开启服务 → 复制 Token
 >    - 然后运行：`python scripts/mcp_fetcher.py --save-config --token "你的Token"`
 >    - 详细指南见 MCP_SETUP.md

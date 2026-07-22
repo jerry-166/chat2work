@@ -20,8 +20,8 @@
 
 访问官方网站下载最新版：
 
-- **官网**：https://wechat-data-analysis.com/
-- **GitHub**：https://github.com/WeChatDataAnalysis
+- **官网**：https://github.com/LifeArchiveProject/WeChatDataAnalysis
+- **GitHub**：https://github.com/LifeArchiveProject/WeChatDataAnalysis
 
 > 选择对应系统的安装包（Windows / macOS），下载后安装。
 

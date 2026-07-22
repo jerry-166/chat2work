@@ -380,6 +380,6 @@ MIT License
 
 ## 致谢
 
-- **WeChatDataAnalysis** — 微信聊天记录分析工具 + MCP 服务
+- **[WeChatDataAnalysis](https://github.com/LifeArchiveProject/WeChatDataAnalysis)** — 微信聊天记录分析工具 + MCP 服务
 - [qq-chat-exporter](https://github.com/shuakami/qq-chat-exporter) — QQ 数据源
 - [colleague-skill](https://github.com/titanwings/colleague-skill) — 蒸馏思路参考
